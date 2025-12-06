@@ -4,11 +4,9 @@ import { NewsPage } from "src/news/page/NewsPage";
 
 function App() {
   return (
-    <>
-      <div>
-        <NewsPage />
-      </div>
-    </>
+    <div>
+      <NewsPage />
+    </div>
   );
 }
 

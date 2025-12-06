@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { newsClient } from "src/news/infra/newsClient";
+import { useEffect, useState } from "react";
 import type { NewsEntity } from "src/news/domain/NewsEntity";
+import { newsClient } from "src/news/infra/newsClient";
 
 export function useNews() {
   const [news, setNews] = useState<NewsEntity[]>([]);

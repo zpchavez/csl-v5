@@ -1,6 +1,6 @@
 import { LoadingIndicator } from "src/components/LoadingIndicator";
-import { NewsPost } from "src/news/page/NewsPost";
 import { useNews } from "src/news/page/NewsPage.hooks";
+import { NewsPost } from "src/news/page/NewsPost";
 
 export function NewsPage() {
   const news = useNews();
@@ -11,7 +11,7 @@ export function NewsPage() {
       <div className="news-columns">
         <div className="news-feed">
           {news ? (
-            news.map((post) => <NewsPost post={post} />)
+            news.map((post) => <NewsPost key={post.post_id} post={post} />)
           ) : (
             <LoadingIndicator />
           )}
