@@ -1,4 +1,7 @@
 {
+  "files": {
+    "includes": ["**", "!**/routeTree.gen.ts"]
+  },
   "formatter": {
     "useEditorconfig": true
   }
