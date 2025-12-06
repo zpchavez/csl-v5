@@ -1,35 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import { newsClient } from "src/news/infra/newsClient";
+import type { NewsEntity } from "src/news/domain/NewsEntity";
+import "./App.css";
+import "src/lib/db";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [news, setNews] = useState<NewsEntity[]>([]);
+
+  useEffect(() => {
+    async function loadNews() {
+      const fetchedNews = await newsClient.fetchLatestNews();
+      setNews(fetchedNews);
+    }
+    loadNews();
+  }, []);
 
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <h1>Proof Of Concept: News</h1>
+        {news.map((item) => (
+          <div key={item.post_id} style={{ marginBottom: "20px" }}>
+            <h2>{item.heading}</h2>
+            <p>
+              <em>{item.date.toDateString()}</em>
+            </p>
+            <div dangerouslySetInnerHTML={{ __html: item.post }} />
+          </div>
+        ))}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
