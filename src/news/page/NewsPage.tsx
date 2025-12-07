@@ -7,15 +7,13 @@ export function NewsPage() {
 
   return (
     <div>
-      <h2 className="page-title">Site News</h2>
-      <div className="news-columns">
-        <div className="news-feed">
-          {news ? (
-            news.map((post) => <NewsPost key={post.post_id} post={post} />)
-          ) : (
-            <LoadingIndicator />
-          )}
-        </div>
+      <h1 className="text-center">Site News</h1>
+      <div className="ml-16 mr-16 w-1/2">
+        {news ? (
+          news.map((post) => <NewsPost key={post.post_id} post={post} />)
+        ) : (
+          <LoadingIndicator />
+        )}
       </div>
     </div>
   );
