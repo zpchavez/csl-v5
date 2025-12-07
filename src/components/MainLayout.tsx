@@ -28,7 +28,7 @@ function NavLink({ path, text }: NavLinkProps) {
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div>
+    <div className="bg-parchment">
       <header className="text-center mb-8">
         <h1 className="site-title">Comic Strip Library</h1>
         <MainSearchBar />
@@ -41,7 +41,8 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
           <NavLink path="/contact" text="Contact" />
         </nav>
       </header>
-      <div className="main-layout__children paper">{children}</div>
+      <hr />
+      <div>{children}</div>
     </div>
   );
 }
