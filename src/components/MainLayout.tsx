@@ -28,7 +28,7 @@ function NavLink({ path, text }: NavLinkProps) {
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-parchment">
+    <div className="bg-parchment height-full min-h-screen pb-8">
       <header className="text-center mb-8">
         <h1 className="site-title">Comic Strip Library</h1>
         <MainSearchBar />
@@ -42,7 +42,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         </nav>
       </header>
       <hr />
-      <div>{children}</div>
+      <div className="mt-6">{children}</div>
     </div>
   );
 }
