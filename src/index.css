@@ -20,6 +20,10 @@ h3 {
   @apply underline! text-black!;
 }
 
+.paragraph {
+  @apply leading-7 mb-8;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
