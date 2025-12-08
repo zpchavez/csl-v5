@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { config } from "src/config";
 import { MainSearchBar } from "./MainSearchBar";
 
 type NavLinkProps = {
@@ -30,7 +31,13 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="bg-parchment height-full min-h-screen pb-8">
       <header className="text-center mb-8">
-        <h1 className="site-title">Comic Strip Library</h1>
+        <Link to="/">
+          <img
+            src={`${config.s3BucketUrl}/assets/csl_logo.png`}
+            alt="Comic Strip Library"
+            className="mx-auto mt-4 mb-4 border-black border rounded-lg"
+          />
+        </Link>
         <MainSearchBar />
         <nav className="flex flex-wrap justify-center gap-3 mt-4">
           <NavLink path="/" text="News" />
