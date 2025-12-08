@@ -29,13 +29,13 @@ function NavLink({ path, text }: NavLinkProps) {
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-parchment height-full min-h-screen pb-8">
+    <div className="bg-parchment height-full min-h-screen pb-8 pt-4">
       <header className="text-center mb-8">
         <Link to="/">
           <img
             src={`${config.s3BucketUrl}/assets/csl_logo.png`}
             alt="Comic Strip Library"
-            className="mx-auto mt-4 mb-4 border-black border rounded-lg"
+            className="mx-auto mb-4 border-black border rounded-lg"
           />
         </Link>
         <MainSearchBar />
