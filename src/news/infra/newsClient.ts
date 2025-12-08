@@ -1,10 +1,12 @@
+import { db } from "src/lib/db";
 import type { NewsClientInterface } from "src/news/domain/NewsClientInterface";
 import type { NewsEntity } from "src/news/domain/NewsEntity";
-import { db } from "src/lib/db";
 
 export const newsClient: NewsClientInterface = {
   async fetchLatestNews() {
-    const statement = db.prepare("SELECT * FROM news ORDER BY date DESC");
+    const statement = db.prepare(
+      "SELECT * FROM news WHERE deleted = 0 ORDER BY date DESC",
+    );
     const results: NewsEntity[] = [];
 
     while (statement.step()) {
