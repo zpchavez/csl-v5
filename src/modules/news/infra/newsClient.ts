@@ -1,6 +1,6 @@
 import { db } from "src/lib/db";
-import type { NewsClientInterface } from "src/news/domain/NewsClientInterface";
-import type { NewsEntity } from "src/news/domain/NewsEntity";
+import type { NewsClientInterface } from "src/modules/news/domain/NewsClientInterface";
+import type { NewsEntity } from "src/modules/news/domain/NewsEntity";
 
 export const newsClient: NewsClientInterface = {
   async fetchLatestNews() {

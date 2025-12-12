@@ -1,6 +1,6 @@
 import { LoadingIndicator } from "src/components/LoadingIndicator";
-import { useGetNews } from "src/news/page/NewsPage.hooks";
-import { NewsPost } from "src/news/page/NewsPost";
+import { useGetNews } from "src/modules/news/page/NewsPage.hooks";
+import { NewsPost } from "src/modules/news/page/NewsPost";
 
 export function NewsPage() {
   const news = useGetNews();

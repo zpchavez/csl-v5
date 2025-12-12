@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type { LinkEntity } from "src/links/domain/LinkEntity";
-import { linksClient } from "src/links/infra/linksClient";
+import type { LinkEntity } from "src/modules/links/domain/LinkEntity";
+import { linksClient } from "src/modules/links/infra/linksClient";
 
 export function useGetLinks() {
   const [links, setLinks] = useState<LinkEntity[]>([]);

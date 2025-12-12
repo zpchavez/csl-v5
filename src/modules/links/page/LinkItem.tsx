@@ -1,5 +1,5 @@
 import { resolveCoverImagePath } from "src/lib/image-resolver";
-import type { LinkEntity } from "src/links/domain/LinkEntity";
+import type { LinkEntity } from "src/modules/links/domain/LinkEntity";
 
 type LinkItemProps = {
   link: LinkEntity;

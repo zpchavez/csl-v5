@@ -1,6 +1,6 @@
 import { db } from "src/lib/db";
-import type { LinksClientInterface } from "src/links/domain/LinksClientInterface";
-import type { LinkEntity } from "../domain/LinkEntity";
+import type { LinkEntity } from "src/modules/links/domain/LinkEntity";
+import type { LinksClientInterface } from "src/modules/links/domain/LinksClientInterface";
 
 export const linksClient: LinksClientInterface = {
   async fetchLinks() {
