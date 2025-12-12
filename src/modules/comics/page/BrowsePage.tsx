@@ -1,6 +1,11 @@
+import { useGetBrowseOptions } from "./BrowsePage.hooks";
 import { SelectField } from "./SelectField";
 
 export function BrowsePage() {
+  const browseOptions = useGetBrowseOptions();
+
+  console.log({ browseOptions });
+
   return (
     <div className="w-1/2 mx-auto">
       <h2 className="text-center">Browse Comics</h2>

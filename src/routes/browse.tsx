@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { BrowsePage } from "src/modules/news/comics/page/BrowsePage";
+import { BrowsePage } from "src/modules/comics/page/BrowsePage";
 
 export const Route = createFileRoute("/browse")({
   component: BrowseRoute,
