@@ -22,7 +22,7 @@ const getWheresAndBindings = (
   const whereStrings = [];
   const bindings = [];
   if (wheres.year && exclude !== "years") {
-    whereStrings.push(`YEAR(date) = ?`);
+    whereStrings.push(`strftime('%Y', date) = ?`);
     bindings.push(wheres.year);
   }
   if (wheres.title && exclude !== "titles") {
@@ -56,9 +56,12 @@ export const metadataClient: MetadataClientInterface = {
     }[] = [
       {
         name: "years",
-        idCol: null,
-        select: ["YEAR(date) AS label", "YEAR(date) AS value"],
-        orderBy: "YEAR(date)",
+        idCol: "date",
+        select: [
+          "strftime('%Y', date) AS label",
+          "strftime('%Y', date) AS value",
+        ],
+        orderBy: "strftime('%Y', date)",
       },
       {
         name: "titles",
@@ -73,7 +76,7 @@ export const metadataClient: MetadataClientInterface = {
         name: "authors",
         idCol: "metadata_authors.author_id",
         select: [
-          `CONCAT(metadata_authors.first_name, ' ', metadata_authors.last_name) AS label`,
+          `metadata_authors.first_name || ' ' || metadata_authors.last_name AS label`,
           "metadata_authors.author_id AS value",
         ],
         orderBy: "metadata_authors.last_name",
@@ -110,14 +113,18 @@ export const metadataClient: MetadataClientInterface = {
           ORDER BY ${field.orderBy}`,
         );
 
+        statement.bind(bindings);
+
         const options: Option[] = [];
 
         while (statement.step()) {
-          const row = statement.getAsObject(bindings);
-          options.push({
-            label: row.label as string,
-            value: row.value as string,
-          });
+          const row = statement.getAsObject();
+          if (row.value && row.label) {
+            options.push({
+              label: row.label as string,
+              value: row.value as string,
+            });
+          }
         }
 
         statement.free();
