@@ -45,7 +45,6 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
           <NavLink path="/links" text="Books & Links" />
           <NavLink path="/about" text="About" />
           <NavLink path="/copyright" text="Copyright Statement" />
-          <NavLink path="/contact" text="Contact" />
         </nav>
       </header>
       <hr />
