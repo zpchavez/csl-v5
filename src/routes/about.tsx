@@ -22,9 +22,8 @@ function AboutRoute() {
       </p>
       <p className="paragraph">
         The Comic Strip Library began as a class project. I continued working on
-        it for many years after graduating in order to improve my web
-        development skills. Now it exists in a read-only form for archival
-        purposes.
+        it on-and-off for some years after graduating. Now it exists in a this
+        read-only form.
       </p>
     </div>
   );
