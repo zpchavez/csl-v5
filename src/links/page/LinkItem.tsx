@@ -38,6 +38,18 @@ export function LinkItem({ link }: LinkItemProps) {
         dangerouslySetInnerHTML={{ __html: link.description }}
       />
       <div className="mt-2">
+        {link.misc_url && link.misc_text ? (
+          <div>
+            <a
+              href={link.misc_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link"
+            >
+              {link.misc_text}
+            </a>
+          </div>
+        ) : null}
         {link.worldcat_url ? (
           <div>
             <a
