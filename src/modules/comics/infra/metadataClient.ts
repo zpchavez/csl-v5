@@ -101,48 +101,46 @@ export const metadataClient: MetadataClientInterface = {
       },
     ];
 
-    return Promise.all(
-      fields.map((field) => {
-        const [wheresSql, bindings] = getWheresAndBindings(wheres, field.name);
+    const fieldOptions = fields.map((field) => {
+      const [wheresSql, bindings] = getWheresAndBindings(wheres, field.name);
 
-        const statement = db.prepare(
-          `SELECT DISTINCT ${field.select.join(", ")}
+      const statement = db.prepare(
+        `SELECT DISTINCT ${field.select.join(", ")}
           FROM metadata_main ${getMetadataJoins()}
           WHERE ${wheresSql}
           ${field.idCol ? ` AND ${field.idCol} IS NOT NULL ` : ""}
           ORDER BY ${field.orderBy}`,
-        );
+      );
 
-        statement.bind(bindings);
+      statement.bind(bindings);
 
-        const options: Option[] = [];
+      const options: Option[] = [];
 
-        while (statement.step()) {
-          const row = statement.getAsObject();
-          if (row.value && row.label) {
-            options.push({
-              label: row.label as string,
-              value: row.value as string,
-            });
-          }
+      while (statement.step()) {
+        const row = statement.getAsObject();
+        if (row.value && row.label) {
+          options.push({
+            label: row.label as string,
+            value: row.value as string,
+          });
         }
+      }
 
-        statement.free();
+      statement.free();
 
-        return options;
-      }),
-    ).then((results) => {
-      const browseOptions: BrowseOptions = {
-        years: [],
-        titles: [],
-        authors: [],
-        characters: [],
-        terms: [],
-      };
-      fields.forEach((field, index) => {
-        browseOptions[field.name] = results[index] as Option[];
-      });
-      return browseOptions;
+      return options;
     });
+
+    const browseOptions: BrowseOptions = {
+      years: [],
+      titles: [],
+      authors: [],
+      characters: [],
+      terms: [],
+    };
+    fields.forEach((field, index) => {
+      browseOptions[field.name] = fieldOptions[index] as Option[];
+    });
+    return browseOptions;
   },
 };
