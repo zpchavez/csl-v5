@@ -8,12 +8,14 @@ import {
 
 type SelectFieldProps = {
   label: string;
+  value: string;
   onValueChange: (value: string) => void;
   options: { value: string; label: string }[];
 };
 
 export function SelectField({
   label,
+  value,
   onValueChange,
   options,
 }: SelectFieldProps) {
@@ -21,9 +23,10 @@ export function SelectField({
     <div>
       <div className="font-bold">{label}</div>
       <Select
-        onValueChange={(value) => {
-          console.log(value);
-          onValueChange(value);
+        value={value}
+        onValueChange={(newValue) => {
+          console.log(newValue);
+          onValueChange(newValue);
         }}
       >
         <SelectTrigger>
@@ -31,7 +34,7 @@ export function SelectField({
         </SelectTrigger>
         <SelectContent>
           {options.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
+            <SelectItem key={option.value} value={option.value.toString()}>
               {option.label}
             </SelectItem>
           ))}
