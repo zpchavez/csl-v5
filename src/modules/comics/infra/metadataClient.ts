@@ -44,6 +44,47 @@ const getWheresAndBindings = (
   return [whereStrings.length ? whereStrings.join(" AND ") : "true", bindings];
 };
 
+const executeQueryAsync = (
+  field: {
+    name: ExcludeWhere;
+    idCol: string | null;
+    select: string[];
+    orderBy: string;
+  },
+  wheres: Wheres,
+): Promise<Option[]> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const [wheresSql, bindings] = getWheresAndBindings(wheres, field.name);
+
+      const statement = db.prepare(
+        `SELECT DISTINCT ${field.select.join(", ")}
+          FROM metadata_main ${getMetadataJoins()}
+          WHERE ${wheresSql}
+          ${field.idCol ? ` AND ${field.idCol} IS NOT NULL ` : ""}
+          ORDER BY ${field.orderBy}`,
+      );
+
+      statement.bind(bindings);
+
+      const options: Option[] = [];
+
+      while (statement.step()) {
+        const row = statement.getAsObject();
+        if (row.value && row.label) {
+          options.push({
+            label: row.label as string,
+            value: row.value as string,
+          });
+        }
+      }
+
+      statement.free();
+      resolve(options);
+    }, 0);
+  });
+};
+
 export const metadataClient: MetadataClientInterface = {
   async fetchBrowseOptions() {
     const wheres: Wheres = {};
@@ -101,35 +142,10 @@ export const metadataClient: MetadataClientInterface = {
       },
     ];
 
-    const fieldOptions = fields.map((field) => {
-      const [wheresSql, bindings] = getWheresAndBindings(wheres, field.name);
-
-      const statement = db.prepare(
-        `SELECT DISTINCT ${field.select.join(", ")}
-          FROM metadata_main ${getMetadataJoins()}
-          WHERE ${wheresSql}
-          ${field.idCol ? ` AND ${field.idCol} IS NOT NULL ` : ""}
-          ORDER BY ${field.orderBy}`,
-      );
-
-      statement.bind(bindings);
-
-      const options: Option[] = [];
-
-      while (statement.step()) {
-        const row = statement.getAsObject();
-        if (row.value && row.label) {
-          options.push({
-            label: row.label as string,
-            value: row.value as string,
-          });
-        }
-      }
-
-      statement.free();
-
-      return options;
-    });
+    const fieldOptionsPromises = fields.map((field) =>
+      executeQueryAsync(field, wheres),
+    );
+    const fieldOptions = await Promise.all(fieldOptionsPromises);
 
     const browseOptions: BrowseOptions = {
       years: [],
