@@ -1,4 +1,5 @@
 import { Controller, useForm } from "react-hook-form";
+import { Button } from "src/components/ui/button";
 import { useGetBrowseOptions } from "./BrowsePage.hooks";
 import { SelectField } from "./SelectField";
 
@@ -25,8 +26,8 @@ export function BrowsePage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4">
-      <h2 className="text-center">Browse Comics</h2>
-      <form onSubmit={handleSubmit(() => {})}>
+      <h2 className="text-center block pb-4">Browse Comics</h2>
+      <form onSubmit={handleSubmit(console.log)}>
         <Controller
           name="year"
           control={control}
@@ -87,6 +88,9 @@ export function BrowsePage() {
             />
           )}
         />
+        <Button type="submit" variant="outline" className="mx-auto block">
+          Submit
+        </Button>
       </form>
     </div>
   );
