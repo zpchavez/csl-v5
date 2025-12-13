@@ -13,6 +13,8 @@ type SelectFieldProps = {
   options: { value: string; label: string; count?: number }[];
 };
 
+const EMPTY_VALUE = "__any__";
+
 export function SelectField({
   label,
   value,
@@ -23,16 +25,20 @@ export function SelectField({
     <div>
       <div className="font-bold">{label}</div>
       <Select
-        value={value}
+        value={value || EMPTY_VALUE}
         onValueChange={(newValue) => {
           console.log(newValue);
-          onValueChange(newValue);
+          const actualValue = newValue === EMPTY_VALUE ? "" : newValue;
+          onValueChange(actualValue);
         }}
       >
         <SelectTrigger>
-          <SelectValue placeholder="any" />
+          <SelectValue />
         </SelectTrigger>
         <SelectContent>
+          <SelectItem key={EMPTY_VALUE} value={EMPTY_VALUE}>
+            Any
+          </SelectItem>
           {options.map((option) => (
             <SelectItem key={option.value} value={option.value.toString()}>
               {option.label}{" "}
