@@ -3,6 +3,7 @@ import type {
   BrowseOptions,
   MetadataClientInterface,
   Option,
+  TermOption,
 } from "src/modules/comics/domain/MetadataClientInterface";
 import { getMetadataJoins } from "src/modules/comics/infra/sqlHelper";
 
@@ -13,11 +14,25 @@ type Wheres = {
   character?: string;
   term?: string;
 };
-type ExcludeWhere = "years" | "titles" | "authors" | "characters" | "terms";
+
+type MetadataFieldName =
+  | "years"
+  | "titles"
+  | "authors"
+  | "characters"
+  | "terms";
+
+type MetadataFieldQueryInfo = {
+  name: MetadataFieldName;
+  idCol: string | null;
+  select: string[];
+  orderBy: string;
+  groupBy?: string;
+};
 
 const getWheresAndBindings = (
   wheres: Wheres,
-  exclude: ExcludeWhere | null,
+  exclude: MetadataFieldName | null,
 ): [string, string[]] => {
   const whereStrings = [];
   const bindings = [];
@@ -45,12 +60,7 @@ const getWheresAndBindings = (
 };
 
 const executeQueryAsync = (
-  field: {
-    name: ExcludeWhere;
-    idCol: string | null;
-    select: string[];
-    orderBy: string;
-  },
+  field: MetadataFieldQueryInfo,
   wheres: Wheres,
 ): Promise<Option[]> => {
   return new Promise((resolve) => {
@@ -62,7 +72,9 @@ const executeQueryAsync = (
           FROM metadata_main ${getMetadataJoins()}
           WHERE ${wheresSql}
           ${field.idCol ? ` AND ${field.idCol} IS NOT NULL ` : ""}
-          ORDER BY ${field.orderBy}`,
+          ${field.groupBy ? ` GROUP BY ${field.groupBy} ` : ""}
+          ORDER BY ${field.orderBy}
+          `,
       );
 
       statement.bind(bindings);
@@ -75,6 +87,7 @@ const executeQueryAsync = (
           options.push({
             label: row.label as string,
             value: row.value as string,
+            ...(row.count ? { count: row.count as number } : {}),
           });
         }
       }
@@ -89,12 +102,7 @@ export const metadataClient: MetadataClientInterface = {
   async fetchBrowseOptions() {
     const wheres: Wheres = {};
 
-    const fields: {
-      name: ExcludeWhere;
-      idCol: string | null;
-      select: string[];
-      orderBy: string;
-    }[] = [
+    const fields: MetadataFieldQueryInfo[] = [
       {
         name: "years",
         idCol: "date",
@@ -137,8 +145,10 @@ export const metadataClient: MetadataClientInterface = {
         select: [
           "thesaurus_terms.term AS label",
           "thesaurus_terms.term_id AS value",
+          "COUNT(DISTINCT metadata_main.episode_id) AS count",
         ],
         orderBy: "thesaurus_terms.term",
+        groupBy: "thesaurus_terms.term_id",
       },
     ];
 
@@ -155,7 +165,11 @@ export const metadataClient: MetadataClientInterface = {
       terms: [],
     };
     fields.forEach((field, index) => {
-      browseOptions[field.name] = fieldOptions[index] as Option[];
+      if (field.name === "terms") {
+        browseOptions.terms = fieldOptions[index] as TermOption[];
+      } else {
+        browseOptions[field.name] = fieldOptions[index] as Option[];
+      }
     });
     return browseOptions;
   },

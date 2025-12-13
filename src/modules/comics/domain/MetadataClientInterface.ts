@@ -3,12 +3,16 @@ export type Option = {
   value: string;
 };
 
+export type TermOption = Option & {
+  count: number;
+};
+
 export type BrowseOptions = {
   years: Option[];
   titles: Option[];
   authors: Option[];
   characters: Option[];
-  terms: Option[];
+  terms: TermOption[];
 };
 
 export interface MetadataClientInterface {

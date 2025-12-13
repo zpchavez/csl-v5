@@ -10,7 +10,7 @@ type SelectFieldProps = {
   label: string;
   value: string;
   onValueChange: (value: string) => void;
-  options: { value: string; label: string }[];
+  options: { value: string; label: string; count?: number }[];
 };
 
 export function SelectField({
@@ -35,7 +35,8 @@ export function SelectField({
         <SelectContent>
           {options.map((option) => (
             <SelectItem key={option.value} value={option.value.toString()}>
-              {option.label}
+              {option.label}{" "}
+              {option.count !== undefined ? `(${option.count})` : ""}
             </SelectItem>
           ))}
         </SelectContent>
