@@ -22,31 +22,33 @@ export function SelectField({
   options,
 }: SelectFieldProps) {
   return (
-    <div>
-      <div className="font-bold">{label}</div>
-      <Select
-        value={value || EMPTY_VALUE}
-        onValueChange={(newValue) => {
-          console.log(newValue);
-          const actualValue = newValue === EMPTY_VALUE ? "" : newValue;
-          onValueChange(actualValue);
-        }}
-      >
-        <SelectTrigger>
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem key={EMPTY_VALUE} value={EMPTY_VALUE}>
-            Any
-          </SelectItem>
-          {options.map((option) => (
-            <SelectItem key={option.value} value={option.value.toString()}>
-              {option.label}{" "}
-              {option.count !== undefined ? `(${option.count})` : ""}
+    <div className="flex items-center gap-4 mb-4">
+      <div className="font-bold text-right min-w-[100px]">{label}:</div>
+      <div>
+        <Select
+          value={value || EMPTY_VALUE}
+          onValueChange={(newValue) => {
+            console.log(newValue);
+            const actualValue = newValue === EMPTY_VALUE ? "" : newValue;
+            onValueChange(actualValue);
+          }}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem key={EMPTY_VALUE} value={EMPTY_VALUE}>
+              Any
             </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+            {options.map((option) => (
+              <SelectItem key={option.value} value={option.value.toString()}>
+                {option.label}{" "}
+                {option.count !== undefined ? `(${option.count})` : ""}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   );
 }

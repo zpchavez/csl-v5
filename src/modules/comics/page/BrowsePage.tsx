@@ -24,7 +24,7 @@ export function BrowsePage() {
   });
 
   return (
-    <div className="w-1/2 mx-auto">
+    <div className="max-w-2xl mx-auto px-4">
       <h2 className="text-center">Browse Comics</h2>
       <form onSubmit={handleSubmit(() => {})}>
         <Controller
