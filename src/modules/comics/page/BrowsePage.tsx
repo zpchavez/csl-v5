@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "src/components/ui/button";
 import { useGetBrowseOptions } from "./BrowsePage.hooks";
@@ -12,9 +13,7 @@ type FormData = {
 };
 
 export function BrowsePage() {
-  const browseOptions = useGetBrowseOptions();
-
-  const { handleSubmit, control } = useForm<FormData>({
+  const { handleSubmit, control, watch } = useForm<FormData>({
     defaultValues: {
       year: "",
       title: "",
@@ -23,6 +22,22 @@ export function BrowsePage() {
       term: "",
     },
   });
+
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const values = watch();
+
+  const filters = useMemo(
+    () => ({
+      year: values.year || undefined,
+      title: values.title || undefined,
+      author: values.author || undefined,
+      character: values.character || undefined,
+      term: values.term || undefined,
+    }),
+    [values.year, values.title, values.author, values.character, values.term],
+  );
+
+  const browseOptions = useGetBrowseOptions(filters);
 
   return (
     <div className="max-w-2xl mx-auto px-4">

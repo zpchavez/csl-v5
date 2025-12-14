@@ -1,19 +1,12 @@
 import { db } from "src/lib/db";
 import type {
   BrowseOptions,
+  Filters,
   MetadataClientInterface,
   Option,
   TermOption,
 } from "src/modules/comics/domain/MetadataClientInterface";
 import { getMetadataJoins } from "src/modules/comics/infra/sqlHelper";
-
-type Wheres = {
-  year?: string;
-  title?: string;
-  author?: string;
-  character?: string;
-  term?: string;
-};
 
 type MetadataFieldName =
   | "years"
@@ -31,41 +24,41 @@ type MetadataFieldQueryInfo = {
 };
 
 const getWheresAndBindings = (
-  wheres: Wheres,
+  filters: Filters,
   exclude: MetadataFieldName | null,
 ): [string, string[]] => {
   const whereStrings = [];
   const bindings = [];
-  if (wheres.year && exclude !== "years") {
+  if (filters.year && exclude !== "years") {
     whereStrings.push(`strftime('%Y', date) = ?`);
-    bindings.push(wheres.year);
+    bindings.push(filters.year);
   }
-  if (wheres.title && exclude !== "titles") {
+  if (filters.title && exclude !== "titles") {
     whereStrings.push(`metadata_titles.title_id = ?`);
-    bindings.push(wheres.title);
+    bindings.push(filters.title);
   }
-  if (wheres.author && exclude !== "authors") {
+  if (filters.author && exclude !== "authors") {
     whereStrings.push(`metadata_authors.author_id = ?`);
-    bindings.push(wheres.author);
+    bindings.push(filters.author);
   }
-  if (wheres.character && exclude !== "characters") {
+  if (filters.character && exclude !== "characters") {
     whereStrings.push(`metadata_characters.character_id = ?`);
-    bindings.push(wheres.character);
+    bindings.push(filters.character);
   }
-  if (wheres.term && exclude !== "terms") {
+  if (filters.term && exclude !== "terms") {
     whereStrings.push(`thesaurus_terms.term_id = ?`);
-    bindings.push(wheres.term);
+    bindings.push(filters.term);
   }
   return [whereStrings.length ? whereStrings.join(" AND ") : "true", bindings];
 };
 
 const executeQueryAsync = (
   field: MetadataFieldQueryInfo,
-  wheres: Wheres,
+  filters: Filters,
 ): Promise<Option[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const [wheresSql, bindings] = getWheresAndBindings(wheres, field.name);
+      const [wheresSql, bindings] = getWheresAndBindings(filters, field.name);
 
       const statement = db.prepare(
         `SELECT DISTINCT ${field.select.join(", ")}
@@ -99,9 +92,7 @@ const executeQueryAsync = (
 };
 
 export const metadataClient: MetadataClientInterface = {
-  async fetchBrowseOptions() {
-    const wheres: Wheres = {};
-
+  async fetchBrowseOptions(filters: Filters) {
     const fields: MetadataFieldQueryInfo[] = [
       {
         name: "years",
@@ -153,7 +144,7 @@ export const metadataClient: MetadataClientInterface = {
     ];
 
     const fieldOptionsPromises = fields.map((field) =>
-      executeQueryAsync(field, wheres),
+      executeQueryAsync(field, filters),
     );
     const fieldOptions = await Promise.all(fieldOptionsPromises);
 

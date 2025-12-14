@@ -15,6 +15,14 @@ export type BrowseOptions = {
   terms: TermOption[];
 };
 
+export type Filters = {
+  year?: string;
+  title?: string;
+  term?: string;
+  author?: string;
+  character?: string;
+};
+
 export interface MetadataClientInterface {
-  fetchBrowseOptions(): Promise<BrowseOptions>;
+  fetchBrowseOptions(filters: Filters): Promise<BrowseOptions>;
 }
