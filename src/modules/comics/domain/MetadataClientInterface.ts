@@ -1,3 +1,6 @@
+import type { PaginatedResultsType } from "src/lib/PaginatedResultsType";
+import type { EpisodeEntity } from "./EpisodeEntity";
+
 export type Option = {
   label: string;
   value: string;
@@ -23,6 +26,13 @@ export type Filters = {
   character?: string;
 };
 
+export type SearchQuery = Filters & {
+  search?: string;
+};
+
 export interface MetadataClientInterface {
   fetchBrowseOptions(filters: Filters): Promise<BrowseOptions>;
+  searchEpisodes(
+    query: SearchQuery,
+  ): Promise<PaginatedResultsType<EpisodeEntity>>;
 }

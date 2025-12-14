@@ -1,4 +1,6 @@
 import { db } from "src/lib/db";
+import type { PaginatedResultsType } from "src/lib/PaginatedResultsType";
+import type { EpisodeEntity } from "src/modules/comics/domain/EpisodeEntity";
 import type {
   BrowseOptions,
   Filters,
@@ -163,5 +165,113 @@ export const metadataClient: MetadataClientInterface = {
       }
     });
     return browseOptions;
+  },
+
+  async searchEpisodes(
+    query: Filters & { search?: string; page?: number },
+  ): Promise<PaginatedResultsType<EpisodeEntity>> {
+    const pageSize = 20;
+    const page = query.page || 1;
+    const offset = (page - 1) * pageSize;
+
+    const whereConditions = [];
+    const bindings = [];
+
+    if (query.year) {
+      whereConditions.push(`strftime('%Y', metadata_main.date) = ?`);
+      bindings.push(query.year);
+    }
+    if (query.title) {
+      whereConditions.push(`metadata_titles.title_id = ?`);
+      bindings.push(query.title);
+    }
+    if (query.author) {
+      whereConditions.push(`metadata_authors.author_id = ?`);
+      bindings.push(query.author);
+    }
+    if (query.character) {
+      whereConditions.push(`metadata_characters.character_id = ?`);
+      bindings.push(query.character);
+    }
+    if (query.term) {
+      whereConditions.push(`thesaurus_terms.term_id = ?`);
+      bindings.push(query.term);
+    }
+    if (query.search) {
+      whereConditions.push(`(
+        metadata_main.transcript LIKE ? OR
+        metadata_titles.title LIKE ? OR
+        (metadata_authors.first_name || ' ' || metadata_authors.last_name) LIKE ? OR
+        thesaurus_terms.term LIKE ? OR
+        metadata_characters.character LIKE ?
+      )`);
+      const searchPattern = `%${query.search}%`;
+      bindings.push(
+        searchPattern,
+        searchPattern,
+        searchPattern,
+        searchPattern,
+        searchPattern,
+      );
+    }
+
+    const whereClause =
+      whereConditions.length > 0
+        ? `WHERE ${whereConditions.join(" AND ")}`
+        : "";
+
+    const countStatement = db.prepare(`
+      SELECT COUNT(DISTINCT metadata_main.episode_id) as total
+      FROM metadata_main ${getMetadataJoins()}
+      ${whereClause}
+    `);
+
+    countStatement.bind(bindings);
+    countStatement.step();
+    const totalCount = countStatement.getAsObject().total as number;
+    countStatement.free();
+
+    const statement = db.prepare(`
+      SELECT DISTINCT
+        metadata_main.episode_id,
+        metadata_main.title_id,
+        metadata_main.suffix,
+        metadata_main.date,
+        metadata_main.episode_title,
+        metadata_main.transcript,
+        metadata_main.summary,
+        metadata_titles.title
+      FROM metadata_main ${getMetadataJoins()}
+      ${whereClause}
+      ORDER BY metadata_main.date DESC, metadata_main.episode_id DESC
+      LIMIT ? OFFSET ?
+    `);
+
+    statement.bind([...bindings, pageSize, offset]);
+
+    const results: EpisodeEntity[] = [];
+    while (statement.step()) {
+      const row = statement.getAsObject();
+      results.push({
+        episode_id: row.episode_id as number,
+        title_id: row.title_id as number,
+        suffix: row.suffix as string,
+        date: new Date(row.date as string),
+        episode_title: row.episode_title as string,
+        transcript: row.transcript as string,
+        summary: row.summary as string,
+      });
+    }
+
+    statement.free();
+
+    const totalPages = Math.ceil(totalCount / pageSize);
+
+    return {
+      results,
+      totalCount,
+      totalPages,
+      currentPage: page,
+    };
   },
 };
