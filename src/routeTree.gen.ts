@@ -11,9 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LinksRouteImport } from './routes/links'
 import { Route as CopyrightRouteImport } from './routes/copyright'
-import { Route as BrowseRouteImport } from './routes/browse'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BrowseIndexRouteImport } from './routes/browse/index'
+import { Route as BrowseResultsRouteImport } from './routes/browse/results'
 
 const LinksRoute = LinksRouteImport.update({
   id: '/links',
@@ -23,11 +24,6 @@ const LinksRoute = LinksRouteImport.update({
 const CopyrightRoute = CopyrightRouteImport.update({
   id: '/copyright',
   path: '/copyright',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BrowseRoute = BrowseRouteImport.update({
-  id: '/browse',
-  path: '/browse',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -40,43 +36,70 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BrowseIndexRoute = BrowseIndexRouteImport.update({
+  id: '/browse/',
+  path: '/browse/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrowseResultsRoute = BrowseResultsRouteImport.update({
+  id: '/browse/results',
+  path: '/browse/results',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/browse': typeof BrowseRoute
   '/copyright': typeof CopyrightRoute
   '/links': typeof LinksRoute
+  '/browse/results': typeof BrowseResultsRoute
+  '/browse': typeof BrowseIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/browse': typeof BrowseRoute
   '/copyright': typeof CopyrightRoute
   '/links': typeof LinksRoute
+  '/browse/results': typeof BrowseResultsRoute
+  '/browse': typeof BrowseIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/browse': typeof BrowseRoute
   '/copyright': typeof CopyrightRoute
   '/links': typeof LinksRoute
+  '/browse/results': typeof BrowseResultsRoute
+  '/browse/': typeof BrowseIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/browse' | '/copyright' | '/links'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/copyright'
+    | '/links'
+    | '/browse/results'
+    | '/browse'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/browse' | '/copyright' | '/links'
-  id: '__root__' | '/' | '/about' | '/browse' | '/copyright' | '/links'
+  to: '/' | '/about' | '/copyright' | '/links' | '/browse/results' | '/browse'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/copyright'
+    | '/links'
+    | '/browse/results'
+    | '/browse/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  BrowseRoute: typeof BrowseRoute
   CopyrightRoute: typeof CopyrightRoute
   LinksRoute: typeof LinksRoute
+  BrowseResultsRoute: typeof BrowseResultsRoute
+  BrowseIndexRoute: typeof BrowseIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -95,13 +118,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CopyrightRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/browse': {
-      id: '/browse'
-      path: '/browse'
-      fullPath: '/browse'
-      preLoaderRoute: typeof BrowseRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -116,15 +132,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/browse/': {
+      id: '/browse/'
+      path: '/browse'
+      fullPath: '/browse'
+      preLoaderRoute: typeof BrowseIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/browse/results': {
+      id: '/browse/results'
+      path: '/browse/results'
+      fullPath: '/browse/results'
+      preLoaderRoute: typeof BrowseResultsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  BrowseRoute: BrowseRoute,
   CopyrightRoute: CopyrightRoute,
   LinksRoute: LinksRoute,
+  BrowseResultsRoute: BrowseResultsRoute,
+  BrowseIndexRoute: BrowseIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

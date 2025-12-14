@@ -1,4 +1,5 @@
-import { useMemo } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import { useCallback, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "src/components/ui/button";
 import { useGetBrowseOptions } from "./BrowsePage.hooks";
@@ -39,10 +40,28 @@ export function BrowsePage() {
 
   const browseOptions = useGetBrowseOptions(filters);
 
+  const navigate = useNavigate({ from: "/browse" });
+
+  const onSubmit = useCallback(
+    (data: FormData) => {
+      const searchWithEmptyValuesRemoved: Record<string, string> = {};
+      Object.entries(data).forEach(([key, value]) => {
+        if (value) {
+          searchWithEmptyValuesRemoved[key] = value;
+        }
+      });
+      navigate({
+        to: "/browse/results",
+        search: searchWithEmptyValuesRemoved,
+      });
+    },
+    [navigate],
+  );
+
   return (
     <div className="max-w-2xl mx-auto px-4">
       <h2 className="text-center block pb-4">Browse Comics</h2>
-      <form onSubmit={handleSubmit(console.log)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
           name="year"
           control={control}

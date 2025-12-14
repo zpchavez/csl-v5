@@ -28,7 +28,6 @@ export function SelectField({
         <Select
           value={value || EMPTY_VALUE}
           onValueChange={(newValue) => {
-            console.log(newValue);
             const actualValue = newValue === EMPTY_VALUE ? "" : newValue;
             onValueChange(actualValue);
           }}
