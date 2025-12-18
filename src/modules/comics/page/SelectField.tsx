@@ -24,7 +24,7 @@ export function SelectField({
   return (
     <div className="flex items-center gap-4 mb-4">
       <div className="font-bold text-right min-w-[100px]">{label}:</div>
-      <div>
+      <div className="bg-white">
         <Select
           value={value || EMPTY_VALUE}
           onValueChange={(newValue) => {

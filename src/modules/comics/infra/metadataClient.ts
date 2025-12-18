@@ -235,6 +235,7 @@ export const metadataClient: MetadataClientInterface = {
       SELECT DISTINCT
         metadata_main.episode_id,
         metadata_main.title_id,
+        metadata_titles.title,
         metadata_main.suffix,
         metadata_main.date,
         metadata_main.episode_title,
@@ -255,6 +256,7 @@ export const metadataClient: MetadataClientInterface = {
       results.push({
         episode_id: row.episode_id as number,
         title_id: row.title_id as number,
+        title: row.title as string,
         suffix: row.suffix as string,
         date: new Date(row.date as string),
         episode_title: row.episode_title as string,

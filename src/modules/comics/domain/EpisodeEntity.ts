@@ -1,6 +1,7 @@
 export type EpisodeEntity = {
   episode_id: number;
   title_id: number;
+  title: string;
   suffix: string;
   date: Date;
   episode_title: string;
