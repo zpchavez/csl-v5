@@ -14,37 +14,39 @@ export function BrowseResultsPage({ query }: { query: Filters }) {
     episodes?.results,
   );
 
-  if (isLoading) {
-    return <LoadingIndicator />;
-  }
-
   return (
     <div className="w-1/2 mx-auto">
       <h2 className="text-center">Browse Results</h2>
-      {episodes?.totalCount === 0 && (
-        <div className="text-center">
-          <p className="text-center mb-4">No results found</p>
-          <Link to="/browse">
-            <Button variant="default">Revise browse criteria</Button>
-          </Link>
-        </div>
-      )}
-      <div className="flex flex-wrap gap-4 justify-center mt-12 w-full">
-        {episodes?.results.map((episode) => (
-          <BrowseResultsItem
-            key={episode.episode_id}
-            episode={episode}
-            thumbnailDimensions={thumbnailDimensions[episode.episode_id]}
-          />
-        ))}
-      </div>
-      {episodes && (
-        <div className="mt-8">
-          <Pagination
-            currentPage={episodes.currentPage}
-            totalPages={episodes.totalPages}
-          />
-        </div>
+      {isLoading ? (
+        <LoadingIndicator />
+      ) : (
+        <>
+          {episodes?.totalCount === 0 && (
+            <div className="text-center">
+              <p className="text-center mb-4">No results found</p>
+              <Link to="/browse">
+                <Button variant="default">Revise browse criteria</Button>
+              </Link>
+            </div>
+          )}
+          <div className="flex flex-wrap gap-4 justify-center mt-12 w-full">
+            {episodes?.results.map((episode) => (
+              <BrowseResultsItem
+                key={episode.episode_id}
+                episode={episode}
+                thumbnailDimensions={thumbnailDimensions[episode.episode_id]}
+              />
+            ))}
+          </div>
+          {episodes && (
+            <div className="mt-8">
+              <Pagination
+                currentPage={episodes.currentPage}
+                totalPages={episodes.totalPages}
+              />
+            </div>
+          )}
+        </>
       )}
     </div>
   );
