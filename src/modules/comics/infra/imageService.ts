@@ -23,6 +23,21 @@ const sizeMap: Record<ImageSize, string> = {
 };
 
 export const imageService = {
+  getImageDimensions(
+    imageUrl: string,
+  ): Promise<{ width: number; height: number }> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        resolve({ width: img.width, height: img.height });
+      };
+      img.onerror = (error) => {
+        reject(error);
+      };
+      img.src = imageUrl;
+    });
+  },
+
   getImageUrl({ episode, size }: { episode: EpisodeEntity; size: ImageSize }) {
     const date = episode.date;
     const year = date.getUTCFullYear();
