@@ -1,4 +1,5 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { LoadingIndicator } from "src/components/LoadingIndicator";
 import { Pagination } from "src/components/Pagination";
 import { Button } from "src/components/ui/button";
@@ -7,8 +8,23 @@ import { useGetThumbnailDimensions } from "src/modules/comics/page/hooks/useGetT
 import { useSearchEpisodes } from "src/modules/comics/page/hooks/useSearchEpisodes";
 import { BrowseResultsItem } from "./BrowseResultsItem";
 
-export function BrowseResultsPage({ query }: { query: Filters }) {
+type BrowseResultsPageProps = {
+  query: Filters & { page?: number };
+};
+
+export function BrowseResultsPage({ query }: BrowseResultsPageProps) {
   const episodes = useSearchEpisodes(query);
+  const navigate = useNavigate({ from: "/browse/results" });
+
+  useEffect(() => {
+    if (episodes && Number(query.page) > episodes?.totalPages) {
+      navigate({
+        to: "/browse/results",
+        search: { ...query, page: String(episodes.totalPages) },
+        replace: true,
+      });
+    }
+  }, [episodes, query, navigate]);
 
   const { thumbnailDimensions, isLoading } = useGetThumbnailDimensions(
     episodes?.results,

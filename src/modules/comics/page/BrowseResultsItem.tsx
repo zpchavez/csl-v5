@@ -12,12 +12,13 @@ export function BrowseResultsItem({
   thumbnailDimensions,
 }: BrowseResultsItemProps) {
   return (
-    <div className="">
+    <div>
       <div className="text-center">{episode.title}</div>
       <div className="text-center">
         {metadataService.getDisplayDate(episode.date)}
       </div>
       <img
+        className="mx-auto"
         src={imageService.getImageUrl({ episode, size: "thumbnail" })}
         width={thumbnailDimensions?.width}
         height={thumbnailDimensions?.height}

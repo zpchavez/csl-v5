@@ -28,6 +28,7 @@ export type Filters = {
 
 export type SearchQuery = Filters & {
   search?: string;
+  page?: number;
 };
 
 export interface MetadataClientInterface {
