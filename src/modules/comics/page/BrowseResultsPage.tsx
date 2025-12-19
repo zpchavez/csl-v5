@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { Pagination } from "src/components/Pagination";
 import { Button } from "src/components/ui/button";
 import type { Filters } from "src/modules/comics/domain/MetadataClientInterface";
 import { useSearchEpisodes } from "src/modules/comics/page/hooks/useSearchEpisodes";
@@ -20,11 +21,19 @@ export function BrowseResultsPage({ query }: { query: Filters }) {
           </Link>
         </div>
       )}
-      <div className="flex flex-wrap gap-4 justify-center mt-12">
+      <div className="flex flex-wrap gap-4 justify-center mt-12 w-full">
         {episodes?.results.map((episode) => (
           <BrowseResultsItem key={episode.episode_id} episode={episode} />
         ))}
       </div>
+      {episodes && (
+        <div className="mt-8">
+          <Pagination
+            currentPage={episodes.currentPage}
+            totalPages={episodes.totalPages}
+          />
+        </div>
+      )}
     </div>
   );
 }
