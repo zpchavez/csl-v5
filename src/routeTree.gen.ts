@@ -14,6 +14,7 @@ import { Route as CopyrightRouteImport } from './routes/copyright'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BrowseIndexRouteImport } from './routes/browse/index'
+import { Route as DisplayIdRouteImport } from './routes/display.$id'
 import { Route as BrowseResultsRouteImport } from './routes/browse/results'
 
 const LinksRoute = LinksRouteImport.update({
@@ -41,6 +42,11 @@ const BrowseIndexRoute = BrowseIndexRouteImport.update({
   path: '/browse/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DisplayIdRoute = DisplayIdRouteImport.update({
+  id: '/display/$id',
+  path: '/display/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BrowseResultsRoute = BrowseResultsRouteImport.update({
   id: '/browse/results',
   path: '/browse/results',
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/copyright': typeof CopyrightRoute
   '/links': typeof LinksRoute
   '/browse/results': typeof BrowseResultsRoute
+  '/display/$id': typeof DisplayIdRoute
   '/browse': typeof BrowseIndexRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/copyright': typeof CopyrightRoute
   '/links': typeof LinksRoute
   '/browse/results': typeof BrowseResultsRoute
+  '/display/$id': typeof DisplayIdRoute
   '/browse': typeof BrowseIndexRoute
 }
 export interface FileRoutesById {
@@ -70,6 +78,7 @@ export interface FileRoutesById {
   '/copyright': typeof CopyrightRoute
   '/links': typeof LinksRoute
   '/browse/results': typeof BrowseResultsRoute
+  '/display/$id': typeof DisplayIdRoute
   '/browse/': typeof BrowseIndexRoute
 }
 export interface FileRouteTypes {
@@ -80,9 +89,17 @@ export interface FileRouteTypes {
     | '/copyright'
     | '/links'
     | '/browse/results'
+    | '/display/$id'
     | '/browse'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/copyright' | '/links' | '/browse/results' | '/browse'
+  to:
+    | '/'
+    | '/about'
+    | '/copyright'
+    | '/links'
+    | '/browse/results'
+    | '/display/$id'
+    | '/browse'
   id:
     | '__root__'
     | '/'
@@ -90,6 +107,7 @@ export interface FileRouteTypes {
     | '/copyright'
     | '/links'
     | '/browse/results'
+    | '/display/$id'
     | '/browse/'
   fileRoutesById: FileRoutesById
 }
@@ -99,6 +117,7 @@ export interface RootRouteChildren {
   CopyrightRoute: typeof CopyrightRoute
   LinksRoute: typeof LinksRoute
   BrowseResultsRoute: typeof BrowseResultsRoute
+  DisplayIdRoute: typeof DisplayIdRoute
   BrowseIndexRoute: typeof BrowseIndexRoute
 }
 
@@ -139,6 +158,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrowseIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/display/$id': {
+      id: '/display/$id'
+      path: '/display/$id'
+      fullPath: '/display/$id'
+      preLoaderRoute: typeof DisplayIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/browse/results': {
       id: '/browse/results'
       path: '/browse/results'
@@ -155,6 +181,7 @@ const rootRouteChildren: RootRouteChildren = {
   CopyrightRoute: CopyrightRoute,
   LinksRoute: LinksRoute,
   BrowseResultsRoute: BrowseResultsRoute,
+  DisplayIdRoute: DisplayIdRoute,
   BrowseIndexRoute: BrowseIndexRoute,
 }
 export const routeTree = rootRouteImport

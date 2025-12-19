@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import type { EpisodeEntity } from "src/modules/comics/domain/EpisodeEntity";
 import { imageService } from "src/modules/comics/infra/imageService";
 import { metadataService } from "src/modules/comics/infra/metadataService";
@@ -17,13 +18,15 @@ export function BrowseResultsItem({
       <div className="text-center">
         {metadataService.getDisplayDate(episode.date)}
       </div>
-      <img
-        className="mx-auto"
-        src={imageService.getImageUrl({ episode, size: "thumbnail" })}
-        width={thumbnailDimensions?.width}
-        height={thumbnailDimensions?.height}
-        alt={`${episode.title} ${metadataService.getDisplayDate(episode.date)}`}
-      />
+      <Link to={`/display/$id`} params={{ id: String(episode.episode_id) }}>
+        <img
+          className="mx-auto"
+          src={imageService.getImageUrl({ episode, size: "thumbnail" })}
+          width={thumbnailDimensions?.width}
+          height={thumbnailDimensions?.height}
+          alt={`${episode.title} ${metadataService.getDisplayDate(episode.date)}`}
+        />
+      </Link>
     </div>
   );
 }
