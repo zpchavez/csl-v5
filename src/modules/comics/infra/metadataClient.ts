@@ -244,7 +244,7 @@ export const metadataClient: MetadataClientInterface = {
         metadata_titles.title
       FROM metadata_main ${getMetadataJoins()}
       ${whereClause}
-      ORDER BY metadata_main.date DESC, metadata_main.episode_id DESC
+      ORDER BY metadata_main.date ASC, metadata_main.episode_id DESC
       LIMIT ? OFFSET ?
     `);
 
