@@ -52,9 +52,11 @@ export const imageService = {
       extension = "jpeg";
     }
 
+    const suffix = episode.suffix ? `-${episode.suffix}` : "";
+
     const url =
       `${baseUrl}/comics/${title}/${title}-` +
-      `${year}${month}${day}-${sizeMap[size]}.${extension}`;
+      `${year}${month}${day}${suffix}-${sizeMap[size]}.${extension}`;
 
     return url;
   },
