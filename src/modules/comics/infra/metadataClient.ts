@@ -276,4 +276,46 @@ export const metadataClient: MetadataClientInterface = {
       currentPage: page,
     };
   },
+
+  async getEpisodeById(id) {
+    const statement = db.prepare(`
+      SELECT DISTINCT
+        metadata_main.episode_id,
+        metadata_main.title_id,
+        metadata_titles.title,
+        metadata_main.suffix,
+        metadata_main.date,
+        metadata_main.episode_title,
+        metadata_main.transcript,
+        metadata_main.summary,
+        metadata_titles.title
+      FROM metadata_main ${getMetadataJoins()}
+      WHERE metadata_main.episode_id = ?
+      LIMIT 1
+    `);
+
+    statement.bind([id]);
+
+    statement.step();
+    const row = statement.getAsObject();
+
+    console.log({ row });
+
+    statement.free();
+
+    if (!row.episode_id) {
+      return false;
+    }
+
+    return {
+      episode_id: row.episode_id as number,
+      title_id: row.title_id as number,
+      title: row.title as string,
+      suffix: row.suffix as string,
+      date: new Date(row.date as string),
+      episode_title: row.episode_title as string,
+      transcript: row.transcript as string,
+      summary: row.summary as string,
+    };
+  },
 };

@@ -36,4 +36,5 @@ export interface MetadataClientInterface {
   searchEpisodes(
     query: SearchQuery,
   ): Promise<PaginatedResultsType<EpisodeEntity>>;
+  getEpisodeById(id: string): Promise<EpisodeEntity | false | null>;
 }
