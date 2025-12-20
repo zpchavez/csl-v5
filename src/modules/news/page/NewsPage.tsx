@@ -5,7 +5,7 @@ import { NewsPost } from "src/modules/news/page/NewsPost";
 export function NewsPage() {
   const news = useGetNews();
 
-  // @TODO Add the 2014/06/07 news item that is live on the php site
+  // @TODO fix link styling in news items (it just looks like regular text)
 
   return (
     <div>
