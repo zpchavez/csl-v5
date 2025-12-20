@@ -19,7 +19,10 @@ export function useGetThumbnailDimensions(
         .getImageDimensions(
           imageService.getImageUrl({ episode, size: "thumbnail" }),
         )
-        .then((dims) => ({ episode_id: episode.episode_id, ...dims }));
+        .then((dims) => ({ episode_id: episode.episode_id, ...dims }))
+        .catch(() => {
+          return { episode_id: episode.episode_id, width: 0, height: 0 };
+        });
     });
 
     Promise.all(dimensions).then((dimensionResults) => {

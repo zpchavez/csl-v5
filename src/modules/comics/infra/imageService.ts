@@ -45,9 +45,16 @@ export const imageService = {
     const day = String(date.getUTCDate()).padStart(2, "0");
     const baseUrl = config.s3BucketUrl;
     const title = titlePrefixMap[episode.title_id];
+
+    let extension = titleExtensionMap[episode.title_id];
+    // Hardcoded exception
+    if (episode.episode_id === 941) {
+      extension = "jpeg";
+    }
+
     const url =
       `${baseUrl}/comics/${title}/${title}-` +
-      `${year}${month}${day}-${sizeMap[size]}.${titleExtensionMap[episode.title_id]}`;
+      `${year}${month}${day}-${sizeMap[size]}.${extension}`;
 
     return url;
   },
