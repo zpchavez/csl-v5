@@ -38,6 +38,19 @@ export const imageService = {
     });
   },
 
+  imageExists(imageUrl: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        resolve(true);
+      };
+      img.onerror = () => {
+        resolve(false);
+      };
+      img.src = imageUrl;
+    });
+  },
+
   getImageUrl({ episode, size }: { episode: EpisodeEntity; size: ImageSize }) {
     const date = episode.date;
     const year = date.getUTCFullYear();

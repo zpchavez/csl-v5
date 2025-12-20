@@ -3,6 +3,7 @@ import { NotFound } from "src/components/NotFound";
 import { imageService } from "src/modules/comics/infra/imageService";
 import { metadataService } from "src/modules/comics/infra/metadataService";
 import { useGetEpisodeById } from "./hooks/useGetEpisodeById";
+import { ImageLink } from "./ImageLink";
 
 type DisplayPageProps = {
   id: string;
@@ -18,11 +19,17 @@ export function DisplayPage({ id }: DisplayPageProps) {
         <NotFound message="Requested comic episode not found" />
       )}
       {episode && (
-        <img
-          className="mx-auto"
-          src={imageService.getImageUrl({ episode: episode, size: "small" })}
-          alt={`Scan of ${episode.title} published on ${metadataService.getDisplayDate(episode.date)}`}
-        />
+        <>
+          <div className="h-12 flex justify-center">
+            <ImageLink episode={episode} size="large" />
+            <ImageLink episode={episode} size="archival" />
+          </div>
+          <img
+            className="mx-auto"
+            src={imageService.getImageUrl({ episode: episode, size: "small" })}
+            alt={`Scan of ${episode.title} published on ${metadataService.getDisplayDate(episode.date)}`}
+          />
+        </>
       )}
     </div>
   );

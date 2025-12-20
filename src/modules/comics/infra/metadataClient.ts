@@ -295,12 +295,8 @@ export const metadataClient: MetadataClientInterface = {
     `);
 
     statement.bind([id]);
-
     statement.step();
     const row = statement.getAsObject();
-
-    console.log({ row });
-
     statement.free();
 
     if (!row.episode_id) {
