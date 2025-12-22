@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { DisplayPage } from "src/modules/comics/page/DisplayPage";
+import { DisplayPage } from "src/modules/comics/page/Display/DisplayPage";
 
 export const Route = createFileRoute("/display/$id")({
   component: DisplayComponent,

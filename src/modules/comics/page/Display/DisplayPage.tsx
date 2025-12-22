@@ -2,7 +2,7 @@ import { LoadingIndicator } from "src/components/LoadingIndicator";
 import { NotFound } from "src/components/NotFound";
 import { imageService } from "src/modules/comics/infra/imageService";
 import { metadataService } from "src/modules/comics/infra/metadataService";
-import { useGetEpisodeById } from "./hooks/useGetEpisodeById";
+import { useGetEpisodeById } from "../hooks/useGetEpisodeById";
 import { ImageLink } from "./ImageLink";
 
 type DisplayPageProps = {

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import { BrowseResultsPage } from "src/modules/comics/page/BrowseResultsPage";
+import { BrowseResultsPage } from "src/modules/comics/page/Browse/BrowseResultsPage";
 import { z } from "zod";
 
 const browseSchema = z.object({
