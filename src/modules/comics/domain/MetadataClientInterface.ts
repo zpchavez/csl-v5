@@ -37,4 +37,7 @@ export interface MetadataClientInterface {
     query: SearchQuery,
   ): Promise<PaginatedResultsType<EpisodeEntity>>;
   getEpisodeById(id: string): Promise<EpisodeEntity | false | null>;
+  getNextAndPreviousEpisodeIds(
+    episode: EpisodeEntity,
+  ): Promise<{ next: string | null; previous: string | null }>;
 }

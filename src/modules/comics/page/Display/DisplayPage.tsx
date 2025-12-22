@@ -4,6 +4,7 @@ import { imageService } from "src/modules/comics/infra/imageService";
 import { metadataService } from "src/modules/comics/infra/metadataService";
 import { useGetEpisodeById } from "../hooks/useGetEpisodeById";
 import { ImageLink } from "./ImageLink";
+import { NextAndPreviousNavigation } from "./NextAndPreviousNavigation";
 
 type DisplayPageProps = {
   id: string;
@@ -29,6 +30,7 @@ export function DisplayPage({ id }: DisplayPageProps) {
             src={imageService.getImageUrl({ episode: episode, size: "small" })}
             alt={`Scan of ${episode.title} published on ${metadataService.getDisplayDate(episode.date)}`}
           />
+          <NextAndPreviousNavigation episode={episode} />
         </>
       )}
     </div>

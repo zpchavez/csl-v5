@@ -30,9 +30,9 @@ export function ImageLink({ episode, size }: ImageLinkProps) {
 
   return (
     <div className="text-center font-medium mb-4">
-      <a href={imageUrl}>
-        <Button variant="ghost">{linkText}</Button>
-      </a>
+      <Button variant="ghost" asChild>
+        <a href={imageUrl}>{linkText}</a>
+      </Button>
     </div>
   );
 }

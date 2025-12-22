@@ -314,4 +314,56 @@ export const metadataClient: MetadataClientInterface = {
       summary: row.summary as string,
     };
   },
+
+  async getNextAndPreviousEpisodeIds(
+    episode: EpisodeEntity,
+  ): Promise<{ next: string | null; previous: string | null }> {
+    const nextStatement = db.prepare(`
+      SELECT metadata_main.episode_id
+      FROM metadata_main
+      WHERE (metadata_main.date > ? OR (metadata_main.date = ? AND metadata_main.suffix > ?))
+      AND metadata_main.title_id = ?
+      AND metadata_main.episode_id != ?
+      ORDER BY metadata_main.date ASC, metadata_main.suffix ASC
+      LIMIT 1
+    `);
+
+    const episodeDateStr = episode.date.toISOString().split("T")[0]; // Convert to YYYY-MM-DD format
+    nextStatement.bind([
+      episodeDateStr,
+      episodeDateStr,
+      episode.suffix,
+      episode.title_id,
+      episode.episode_id,
+    ]);
+    nextStatement.step();
+    const nextRow = nextStatement.getAsObject();
+    nextStatement.free();
+
+    const previousStatement = db.prepare(`
+      SELECT metadata_main.episode_id
+      FROM metadata_main
+      WHERE (metadata_main.date < ? OR (metadata_main.date = ? AND metadata_main.suffix < ?))
+      AND metadata_main.title_id = ?
+      AND metadata_main.episode_id != ?
+      ORDER BY metadata_main.date DESC, metadata_main.suffix DESC
+      LIMIT 1
+    `);
+
+    previousStatement.bind([
+      episodeDateStr,
+      episodeDateStr,
+      episode.suffix,
+      episode.title_id,
+      episode.episode_id,
+    ]);
+    previousStatement.step();
+    const previousRow = previousStatement.getAsObject();
+    previousStatement.free();
+
+    return {
+      next: nextRow.episode_id ? String(nextRow.episode_id) : null,
+      previous: previousRow.episode_id ? String(previousRow.episode_id) : null,
+    };
+  },
 };

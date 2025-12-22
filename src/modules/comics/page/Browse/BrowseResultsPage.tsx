@@ -40,9 +40,9 @@ export function BrowseResultsPage({ query }: BrowseResultsPageProps) {
           {episodes?.totalCount === 0 && (
             <div className="text-center">
               <p className="text-center mb-4">No results found</p>
-              <Link to="/browse">
-                <Button variant="default">Revise browse criteria</Button>
-              </Link>
+              <Button variant="default" asChild>
+                <Link to="/browse">Revise browse criteria</Link>
+              </Button>
             </div>
           )}
           <div className="flex flex-wrap gap-4 justify-center mt-12 w-full">
