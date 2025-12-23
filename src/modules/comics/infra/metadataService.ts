@@ -5,4 +5,17 @@ export const metadataService = {
     const day = String(date.getUTCDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   },
+
+  getDayOfTheWeek(date: Date): string {
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    return days[date.getUTCDay()];
+  },
 };
