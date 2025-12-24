@@ -15,5 +15,9 @@ export function useGetEpisodeById(id: string) {
     getEpisode();
   }, [id]);
 
+  if (episode && episode.episode_id !== Number(id)) {
+    return null;
+  }
+
   return episode;
 }

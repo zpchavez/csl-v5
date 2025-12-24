@@ -6,6 +6,7 @@ export function NewsPage() {
   const news = useGetNews();
 
   // @TODO fix link styling in news items (it just looks like regular text)
+  // @TODO Add 'latest comics' column
 
   return (
     <div>

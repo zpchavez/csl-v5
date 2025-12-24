@@ -14,12 +14,9 @@ type DisplayPageProps = {
 export function DisplayPage({ id }: DisplayPageProps) {
   const episode = useGetEpisodeById(id);
 
-  // @TODO when next/previous buttons are clicked, the old episode shows briefly
-  // We should display a loading indicator instead, using a value returned by the hook
-
   return (
     <div className="mx-auto">
-      {episode === null && <LoadingIndicator />}
+      {episode === null && <LoadingIndicator delay={0} />}
       {episode === false && (
         <NotFound message="Requested comic episode not found" />
       )}
