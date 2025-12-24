@@ -1,7 +1,7 @@
 import { config } from "src/config";
 import type { EpisodeEntity } from "../domain/EpisodeEntity";
 
-type ImageSize = "thumbnail" | "small" | "large" | "archival";
+export type ImageSize = "thumbnail" | "small" | "large" | "archival";
 
 const titlePrefixMap: Record<number, string> = {
   1: "krazy-kat",

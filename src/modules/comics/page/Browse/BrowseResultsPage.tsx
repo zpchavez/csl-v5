@@ -4,7 +4,7 @@ import { LoadingIndicator } from "src/components/LoadingIndicator";
 import { Pagination } from "src/components/Pagination";
 import { Button } from "src/components/ui/button";
 import type { Filters } from "src/modules/comics/domain/MetadataClientInterface";
-import { useGetThumbnailDimensions } from "src/modules/comics/page/hooks/useGetThumbnailDimensions";
+import { useGetDimensions } from "src/modules/comics/page/hooks/useGetDimensions";
 import { useSearchEpisodes } from "src/modules/comics/page/hooks/useSearchEpisodes";
 import { BrowseResultsItem } from "./BrowseResultsItem";
 
@@ -26,9 +26,10 @@ export function BrowseResultsPage({ query }: BrowseResultsPageProps) {
     }
   }, [episodes, query, navigate]);
 
-  const { thumbnailDimensions, isLoading } = useGetThumbnailDimensions(
-    episodes?.results,
-  );
+  const { dimensions: thumbnailDimensions, isLoading } = useGetDimensions({
+    episodes: episodes?.results,
+    size: "thumbnail",
+  });
 
   return (
     <div className="w-1/2 mx-auto">

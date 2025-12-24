@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
 import { LoadingIndicator } from "src/components/LoadingIndicator";
 import { NotFound } from "src/components/NotFound";
 import { imageService } from "src/modules/comics/infra/imageService";
 import { metadataService } from "src/modules/comics/infra/metadataService";
+import { useGetDimensions } from "../hooks/useGetDimensions";
 import { useGetEpisodeById } from "../hooks/useGetEpisodeById";
 import { ImageLink } from "./ImageLink";
 import { Metadata } from "./Metadata";
@@ -13,34 +13,14 @@ type DisplayPageProps = {
 };
 
 export function DisplayPage({ id }: DisplayPageProps) {
-  const [dimensions, setDimensions] = useState<{
-    width: number;
-    height: number;
-  } | null>(null);
-
   const episode = useGetEpisodeById(id);
 
-  const imageUrl = useMemo(
-    () =>
-      episode
-        ? imageService.getImageUrl({ episode: episode, size: "small" })
-        : null,
-    [episode],
-  );
+  const { dimensions, isLoading: isLoadingDimensions } = useGetDimensions({
+    episodes: episode ? [episode] : undefined,
+    size: "small",
+  });
 
-  useEffect(() => {
-    const getDimensions = async (imageUrl: string | null) => {
-      if (!imageUrl) {
-        setDimensions(null);
-        return;
-      }
-      const dimensions = await imageService.getImageDimensions(imageUrl);
-      setDimensions(dimensions);
-    };
-    getDimensions(imageUrl);
-  }, [imageUrl]);
-
-  const isLoading = episode === null || !dimensions;
+  const isLoading = episode === null || isLoadingDimensions;
 
   return (
     <div className="mx-auto">
@@ -57,8 +37,8 @@ export function DisplayPage({ id }: DisplayPageProps) {
           <img
             className="mx-auto"
             src={imageService.getImageUrl({ episode: episode, size: "small" })}
-            width={dimensions?.width}
-            height={dimensions?.height}
+            width={dimensions[Number(id)]?.width}
+            height={dimensions[Number(id)]?.height}
             alt={`Scan of ${episode.title} published on ${metadataService.getDisplayDate(episode.date)}`}
           />
           <NextAndPreviousNavigation episode={episode} />
