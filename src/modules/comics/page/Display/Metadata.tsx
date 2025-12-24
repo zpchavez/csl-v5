@@ -13,8 +13,24 @@ export function Metadata({ episode }: MetadataProps) {
       <div className="text-center">
         <h3>Metadata</h3>
       </div>
-      <MetadataField label="Title">{episode.title}</MetadataField>
-      <MetadataField label="Author">{episode.author}</MetadataField>
+      <MetadataField label="Title">
+        <Link
+          to="/browse/results"
+          search={{ title: String(episode.title_id) }}
+          className="underline"
+        >
+          {episode.title}
+        </Link>
+      </MetadataField>
+      <MetadataField label="Author">
+        <Link
+          to="/browse/results"
+          search={{ author: String(episode.author_id) }}
+          className="underline"
+        >
+          {episode.author}
+        </Link>
+      </MetadataField>
       <MetadataField label="Date Published">
         {metadataService.getDisplayDate(episode.date)} -&nbsp;
         {metadataService.getDayOfTheWeek(episode.date)}
