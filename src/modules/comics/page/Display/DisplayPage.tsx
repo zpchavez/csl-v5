@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from "react";
 import { LoadingIndicator } from "src/components/LoadingIndicator";
 import { NotFound } from "src/components/NotFound";
 import { imageService } from "src/modules/comics/infra/imageService";
@@ -12,11 +13,31 @@ type DisplayPageProps = {
 };
 
 export function DisplayPage({ id }: DisplayPageProps) {
+  const [dimensions, setDimensions] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
   const episode = useGetEpisodeById(id);
+  const imageUrl = useMemo(
+    () =>
+      episode
+        ? imageService.getImageUrl({ episode: episode, size: "small" })
+        : null,
+    [episode],
+  );
+  useEffect(() => {
+    const getDimensions = async (imageUrl: string) => {
+      const dimensions = await imageService.getImageDimensions(imageUrl);
+      setDimensions(dimensions);
+    };
+    if (imageUrl) {
+      getDimensions(imageUrl);
+    }
+  }, [imageUrl]);
 
   return (
     <div className="mx-auto">
-      {episode === null && <LoadingIndicator delay={0} />}
+      {(episode === null || !dimensions) && <LoadingIndicator delay={0} />}
       {episode === false && (
         <NotFound message="Requested comic episode not found" />
       )}
@@ -29,6 +50,8 @@ export function DisplayPage({ id }: DisplayPageProps) {
           <img
             className="mx-auto"
             src={imageService.getImageUrl({ episode: episode, size: "small" })}
+            width={dimensions?.width}
+            height={dimensions?.height}
             alt={`Scan of ${episode.title} published on ${metadataService.getDisplayDate(episode.date)}`}
           />
           <NextAndPreviousNavigation episode={episode} />
