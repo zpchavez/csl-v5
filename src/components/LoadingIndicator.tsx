@@ -6,9 +6,13 @@ type LoadingIndicatorProps = {
 };
 
 export function LoadingIndicator({ delay = 300 }: LoadingIndicatorProps) {
-  const [delayElapsed, setDelayElapsed] = useState(false);
+  const [delayElapsed, setDelayElapsed] = useState(delay === 0);
 
   useEffect(() => {
+    if (delay === 0) {
+      return;
+    }
+
     const timer = setTimeout(() => {
       setDelayElapsed(true);
     }, delay);

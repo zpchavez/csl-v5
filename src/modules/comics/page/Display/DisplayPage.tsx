@@ -17,7 +17,9 @@ export function DisplayPage({ id }: DisplayPageProps) {
     width: number;
     height: number;
   } | null>(null);
+
   const episode = useGetEpisodeById(id);
+
   const imageUrl = useMemo(
     () =>
       episode
@@ -25,23 +27,28 @@ export function DisplayPage({ id }: DisplayPageProps) {
         : null,
     [episode],
   );
+
   useEffect(() => {
-    const getDimensions = async (imageUrl: string) => {
+    const getDimensions = async (imageUrl: string | null) => {
+      if (!imageUrl) {
+        setDimensions(null);
+        return;
+      }
       const dimensions = await imageService.getImageDimensions(imageUrl);
       setDimensions(dimensions);
     };
-    if (imageUrl) {
-      getDimensions(imageUrl);
-    }
+    getDimensions(imageUrl);
   }, [imageUrl]);
+
+  const isLoading = episode === null || !dimensions;
 
   return (
     <div className="mx-auto">
-      {(episode === null || !dimensions) && <LoadingIndicator delay={0} />}
+      {isLoading && <LoadingIndicator delay={0} />}
       {episode === false && (
         <NotFound message="Requested comic episode not found" />
       )}
-      {episode && (
+      {episode && !isLoading && (
         <>
           <div className="h-12 flex justify-center">
             <ImageLink episode={episode} size="large" />
