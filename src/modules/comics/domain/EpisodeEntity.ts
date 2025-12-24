@@ -9,3 +9,23 @@ export type EpisodeEntity = {
   transcript: string;
   summary: string;
 };
+
+export type EpisodeEntityWithRelations = EpisodeEntity & {
+  terms: EpisodeTerms;
+  characters: EpisodeCharacters;
+};
+
+export type EpisodeTerm = {
+  term_id: number;
+  term: string;
+  usageCount: number;
+};
+
+export type EpisodeCharacter = {
+  character_id: number;
+  name: string;
+};
+
+export type EpisodeTerms = EpisodeTerm[];
+
+export type EpisodeCharacters = EpisodeCharacter[];

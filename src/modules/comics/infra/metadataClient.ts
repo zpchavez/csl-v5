@@ -306,6 +306,48 @@ export const metadataClient: MetadataClientInterface = {
       return false;
     }
 
+    const charactersStatement = db.prepare(`
+      SELECT
+        metadata_characters.character_id,
+        metadata_characters.character
+      FROM metadata_characters
+      JOIN metadata_character_map
+        ON metadata_character_map.character_id = metadata_characters.character_id
+      WHERE metadata_character_map.episode_id = ?
+      ORDER BY metadata_characters.character ASC
+    `);
+    charactersStatement.bind([id]);
+    const characters = [];
+    while (charactersStatement.step()) {
+      const charRow = charactersStatement.getAsObject();
+      characters.push({
+        character_id: charRow.character_id as number,
+        name: charRow.character as string,
+      });
+    }
+    charactersStatement.free();
+
+    const termsStatement = db.prepare(`
+      SELECT
+        thesaurus_terms.term_id,
+        thesaurus_terms.term,
+        (SELECT COUNT(*) FROM metadata_term_map WHERE metadata_term_map.term_id = thesaurus_terms.term_id) AS usageCount
+      FROM thesaurus_terms
+      JOIN metadata_term_map
+        ON metadata_term_map.term_id = thesaurus_terms.term_id
+      WHERE metadata_term_map.episode_id = ?
+    `);
+    termsStatement.bind([id]);
+    const terms = [];
+    while (termsStatement.step()) {
+      const termRow = termsStatement.getAsObject();
+      terms.push({
+        term_id: termRow.term_id as number,
+        term: termRow.term as string,
+        usageCount: termRow.usageCount as number,
+      });
+    }
+
     return {
       episode_id: row.episode_id as number,
       title_id: row.title_id as number,
@@ -316,6 +358,8 @@ export const metadataClient: MetadataClientInterface = {
       episode_title: row.episode_title as string,
       transcript: row.transcript as string,
       summary: row.summary as string,
+      characters,
+      terms,
     };
   },
 

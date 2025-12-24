@@ -1,8 +1,10 @@
-import type { EpisodeEntity } from "src/modules/comics/domain/EpisodeEntity";
+import { Link } from "@tanstack/react-router";
+import type { EpisodeEntityWithRelations } from "src/modules/comics/domain/EpisodeEntity";
 import { metadataService } from "src/modules/comics/infra/metadataService";
+import { MetadataField } from "./MetadataField";
 
 type MetadataProps = {
-  episode: EpisodeEntity;
+  episode: EpisodeEntityWithRelations;
 };
 
 export function Metadata({ episode }: MetadataProps) {
@@ -11,31 +13,42 @@ export function Metadata({ episode }: MetadataProps) {
       <div className="text-center">
         <h3>Metadata</h3>
       </div>
-      <div className="flex p-4">
-        <div className="flex-1 border-b border-black text-center font-semibold">
-          Title
-        </div>
-        <div className="flex-2 text-center border-b border-black">
-          {episode.title}
-        </div>
-      </div>
-      <div className="flex p-4">
-        <div className="flex-1 border-b border-black text-center font-semibold">
-          Author
-        </div>
-        <div className="flex-2 text-center border-b border-black">
-          {episode.author}
-        </div>
-      </div>
-      <div className="flex p-4">
-        <div className="flex-1 border-b border-black text-center font-semibold">
-          Date Published
-        </div>
-        <div className="flex-2 text-center border-b border-black">
-          {metadataService.getDisplayDate(episode.date)} -&nbsp;
-          {metadataService.getDayOfTheWeek(episode.date)}
-        </div>
-      </div>
+      <MetadataField label="Title">{episode.title}</MetadataField>
+      <MetadataField label="Author">{episode.author}</MetadataField>
+      <MetadataField label="Date Published">
+        {metadataService.getDisplayDate(episode.date)} -&nbsp;
+        {metadataService.getDayOfTheWeek(episode.date)}
+      </MetadataField>
+      {episode.episode_title && (
+        <MetadataField label="Episode Title">
+          {episode.episode_title}
+        </MetadataField>
+      )}
+      {episode.summary && (
+        <MetadataField label="Summary">{episode.summary}</MetadataField>
+      )}
+      {episode.characters.length && (
+        <MetadataField label="Characters">
+          {episode.characters.map((char) => char.name).join(", ")}
+        </MetadataField>
+      )}
+      <MetadataField label="Contents">
+        {episode.terms.length > 0
+          ? episode.terms.map((term, index) => (
+              <>
+                <Link
+                  to="/browse/results"
+                  search={{ term: String(term.term_id) }}
+                  key={term.term_id}
+                  className="whitespace-nowrap underline"
+                >
+                  {term.term}&nbsp;({term.usageCount})
+                </Link>
+                {index < episode.terms.length - 1 ? ", " : ""}
+              </>
+            ))
+          : "N/A"}
+      </MetadataField>
     </div>
   );
 }

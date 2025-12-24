@@ -1,5 +1,8 @@
 import type { PaginatedResultsType } from "src/lib/PaginatedResultsType";
-import type { EpisodeEntity } from "./EpisodeEntity";
+import type {
+  EpisodeEntity,
+  EpisodeEntityWithRelations,
+} from "./EpisodeEntity";
 
 export type Option = {
   label: string;
@@ -36,7 +39,9 @@ export interface MetadataClientInterface {
   searchEpisodes(
     query: SearchQuery,
   ): Promise<PaginatedResultsType<EpisodeEntity>>;
-  getEpisodeById(id: string): Promise<EpisodeEntity | false | null>;
+  getEpisodeById(
+    id: string,
+  ): Promise<EpisodeEntityWithRelations | false | null>;
   getNextAndPreviousEpisodeIds(
     episode: EpisodeEntity,
   ): Promise<{ next: string | null; previous: string | null }>;
