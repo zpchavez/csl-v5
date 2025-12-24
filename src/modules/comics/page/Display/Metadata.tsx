@@ -7,6 +7,8 @@ type MetadataProps = {
   episode: EpisodeEntityWithRelations;
 };
 
+// @TODO make characters into links
+
 export function Metadata({ episode }: MetadataProps) {
   return (
     <div className="mx-auto w-1/2 border-black border bg-white pt-4">
@@ -43,28 +45,40 @@ export function Metadata({ episode }: MetadataProps) {
       {episode.summary && (
         <MetadataField label="Summary">{episode.summary}</MetadataField>
       )}
-      {episode.characters.length && (
+      {episode.characters.length ? (
         <MetadataField label="Characters">
-          {episode.characters.map((char) => char.name).join(", ")}
+          {episode.characters.map((character, index) => (
+            <>
+              <Link
+                to="/browse/results"
+                search={{ character: String(character.character_id) }}
+                key={character.character_id}
+                className="whitespace-nowrap underline"
+              >
+                {character.name}
+              </Link>
+              {index < episode.characters.length - 1 ? ", " : ""}
+            </>
+          ))}
         </MetadataField>
-      )}
-      <MetadataField label="Contents">
-        {episode.terms.length > 0
-          ? episode.terms.map((term, index) => (
-              <>
-                <Link
-                  to="/browse/results"
-                  search={{ term: String(term.term_id) }}
-                  key={term.term_id}
-                  className="whitespace-nowrap underline"
-                >
-                  {term.term}&nbsp;({term.usageCount})
-                </Link>
-                {index < episode.terms.length - 1 ? ", " : ""}
-              </>
-            ))
-          : "N/A"}
-      </MetadataField>
+      ) : null}
+      {episode.terms.length ? (
+        <MetadataField label="Contents">
+          {episode.terms.map((term, index) => (
+            <>
+              <Link
+                to="/browse/results"
+                search={{ term: String(term.term_id) }}
+                key={term.term_id}
+                className="whitespace-nowrap underline"
+              >
+                {term.term}&nbsp;({term.usageCount})
+              </Link>
+              {index < episode.terms.length - 1 ? ", " : ""}
+            </>
+          ))}
+        </MetadataField>
+      ) : null}
       {episode.transcript && (
         <MetadataField label="Transcript">
           <pre className="whitespace-pre-wrap">{episode.transcript}</pre>
