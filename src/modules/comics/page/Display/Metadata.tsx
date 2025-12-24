@@ -10,7 +10,7 @@ type MetadataProps = {
 export function Metadata({ episode }: MetadataProps) {
   return (
     <div className="mx-auto w-1/2 border bg-white pt-4">
-      <div className="text-center">
+      <div className="text-center border-b border-black">
         <h3>Metadata</h3>
       </div>
       <MetadataField label="Title">
@@ -65,6 +65,13 @@ export function Metadata({ episode }: MetadataProps) {
             ))
           : "N/A"}
       </MetadataField>
+      {episode.transcript && (
+        <MetadataField label="Transcript">
+          <pre className="whitespace-pre-wrap text-left">
+            {episode.transcript}
+          </pre>
+        </MetadataField>
+      )}
     </div>
   );
 }
