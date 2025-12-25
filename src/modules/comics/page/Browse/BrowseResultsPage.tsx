@@ -31,9 +31,6 @@ export function BrowseResultsPage({ query }: BrowseResultsPageProps) {
     size: "thumbnail",
   });
 
-  // @TODO fix infinite render loop
-  console.log("rendering BrowseResultsPage with episodes:");
-
   return (
     <div className="w-1/2 mx-auto">
       <h2 className="text-center">Browse Results</h2>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   type ImageSize,
   imageService,
@@ -16,23 +16,26 @@ export function useGetDimensions({
     Record<number, { width: number; height: number }>
   >({});
 
+  const lastFetchedEpisodeIds = useRef<number[]>([]);
+
   useEffect(() => {
     const getDimensions = async (eps: EpisodeEntity[] | undefined) => {
-      if (!eps) {
+      if (!eps || eps.length === 0) {
         setDimensions({});
+        lastFetchedEpisodeIds.current = [];
         return;
       }
 
       const episodeIds = eps.map((episode) => episode.episode_id);
-      const dimensionKeys = Object.keys(dimensions).map((key) => Number(key));
-      const hasDimensions = dimensionKeys.length > 0;
-      const dimensionsMatchEpisodes = episodeIds.every((id) =>
-        dimensionKeys.includes(id),
-      );
 
-      if (hasDimensions && !dimensionsMatchEpisodes) {
-        setDimensions({});
+      const needsRefetch =
+        episodeIds.length !== lastFetchedEpisodeIds.current.length ||
+        episodeIds.some((id) => !lastFetchedEpisodeIds.current.includes(id));
+
+      if (!needsRefetch) {
         return;
+      } else {
+        setDimensions({});
       }
 
       const dimensionPromises = eps.map((episode) => {
@@ -56,10 +59,12 @@ export function useGetDimensions({
           return newValue;
         });
       });
+
+      lastFetchedEpisodeIds.current = episodeIds;
     };
 
     getDimensions(episodes);
-  }, [episodes, size, dimensions]);
+  }, [episodes, size]);
 
   return {
     dimensions,
