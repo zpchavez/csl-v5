@@ -7,8 +7,6 @@ type MetadataProps = {
   episode: EpisodeEntityWithRelations;
 };
 
-// @TODO make characters into links
-
 export function Metadata({ episode }: MetadataProps) {
   return (
     <div className="mx-auto w-1/2 border-black border bg-white pt-4">
