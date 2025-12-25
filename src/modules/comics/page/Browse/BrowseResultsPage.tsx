@@ -7,6 +7,7 @@ import type { Filters } from "src/modules/comics/domain/MetadataClientInterface"
 import { useGetDimensions } from "src/modules/comics/page/hooks/useGetDimensions";
 import { useSearchEpisodes } from "src/modules/comics/page/hooks/useSearchEpisodes";
 import { BrowseResultsItem } from "./BrowseResultsItem";
+import { RelatedTerms } from "./RelatedTerms";
 
 type BrowseResultsPageProps = {
   query: Filters & { page?: number };
@@ -38,6 +39,7 @@ export function BrowseResultsPage({ query }: BrowseResultsPageProps) {
         <LoadingIndicator />
       ) : (
         <>
+          {query.term ? <RelatedTerms termId={Number(query.term)} /> : null}
           {episodes?.totalCount === 0 && (
             <div className="text-center">
               <p className="text-center mb-4">No results found</p>

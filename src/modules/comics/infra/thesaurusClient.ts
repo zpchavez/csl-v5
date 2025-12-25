@@ -22,14 +22,14 @@ export const thesaurusClient = {
     ) => {
       const sql = `
         SELECT
-          tt.term_id,
-          tt.term
+          thesaurus_terms.term_id,
+          thesaurus_terms.term
           ${type === "UF" ? "" : `,${usageCountSQL}`}
-        FROM thesaurus_terms as tt
-        JOIN thesaurus_relationships as tr
-        ON tt.term_id = tr.term_id
+        FROM thesaurus_terms
+        JOIN thesaurus_relationships
+        ON thesaurus_terms.term_id = thesaurus_relationships.term_id
         WHERE type = ?
-        AND tt.term_id = ?
+        AND thesaurus_terms.term_id = ?
       `;
       const bindings = [type, termId];
       const statement = db.prepare(sql);
@@ -79,6 +79,7 @@ export const thesaurusClient = {
       LIMIT 1
     `);
 
+    termStatement.bind([termId]);
     termStatement.step();
     const termRow = termStatement.getAsObject();
     termStatement.free();
@@ -109,6 +110,7 @@ export const thesaurusClient = {
           usedForTermsStatement,
         ),
       };
+
       return termDetails;
     } else {
       const term: NonPreferredTerm = {
