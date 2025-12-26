@@ -11,6 +11,8 @@ export type NonPreferredTerm = {
   is_preferred: false;
 };
 
+export type Term = PreferredTerm | NonPreferredTerm;
+
 export type PreferredTermDetails = {
   term: PreferredTerm;
   related_terms: PreferredTerm[];
@@ -25,3 +27,7 @@ export type NonPreferredTermDetails = {
 };
 
 export type TermDetails = PreferredTermDetails | NonPreferredTermDetails;
+
+export const isPreferredTerm = (term: Term): term is PreferredTerm => {
+  return term.is_preferred === true;
+};
