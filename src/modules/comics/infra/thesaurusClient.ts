@@ -27,9 +27,9 @@ export const thesaurusClient = {
           ${type === "UF" ? "" : `,${usageCountSQL}`}
         FROM thesaurus_terms
         JOIN thesaurus_relationships
-        ON thesaurus_terms.term_id = thesaurus_relationships.term_id
+        ON thesaurus_terms.term_id = thesaurus_relationships.related_id
         WHERE type = ?
-        AND thesaurus_terms.term_id = ?
+        AND thesaurus_relationships.term_id = ?
       `;
       const bindings = [type, termId];
       const statement = db.prepare(sql);
