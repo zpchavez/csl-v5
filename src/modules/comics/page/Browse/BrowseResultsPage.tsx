@@ -3,14 +3,14 @@ import { useEffect } from "react";
 import { LoadingIndicator } from "src/components/LoadingIndicator";
 import { Pagination } from "src/components/Pagination";
 import { Button } from "src/components/ui/button";
-import type { Filters } from "src/modules/comics/domain/MetadataClientInterface";
+import type { SearchQuery } from "src/modules/comics/domain/MetadataClientInterface";
 import { useGetDimensions } from "src/modules/comics/page/hooks/useGetDimensions";
 import { useSearchEpisodes } from "src/modules/comics/page/hooks/useSearchEpisodes";
 import { BrowseResultsItem } from "./BrowseResultsItem";
 import { RelatedTerms } from "./RelatedTerms";
 
 type BrowseResultsPageProps = {
-  query: Filters & { page?: number };
+  query: SearchQuery;
 };
 
 export function BrowseResultsPage({ query }: BrowseResultsPageProps) {
@@ -32,9 +32,11 @@ export function BrowseResultsPage({ query }: BrowseResultsPageProps) {
     size: "thumbnail",
   });
 
+  const typeOfQuery = query.search ? "Search" : "Browse";
+
   return (
     <div className="w-1/2 mx-auto">
-      <h2 className="text-center">Browse Results</h2>
+      <h2 className="text-center">{typeOfQuery} Results</h2>
       {isLoading ? (
         <LoadingIndicator />
       ) : (

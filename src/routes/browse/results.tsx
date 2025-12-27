@@ -9,6 +9,7 @@ const browseSchema = z.object({
   character: z.string().optional(),
   author: z.string().optional(),
   term: z.string().optional(),
+  search: z.string().optional(),
   page: z.coerce.number().min(1).optional().catch(1),
 });
 
