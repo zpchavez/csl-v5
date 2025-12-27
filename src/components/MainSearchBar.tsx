@@ -1,4 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
+import { SearchIcon } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { Input } from "src/components/ui/input";
 
@@ -34,12 +35,15 @@ export function MainSearchBar() {
           name="query"
           control={control}
           render={({ field }) => (
-            <Input
-              type="text"
-              placeholder="Search comics..."
-              className="w-80 max-w-full mx-auto bg-white"
-              {...field}
-            />
+            <div className="relative w-80 max-w-full mx-auto">
+              <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+              <Input
+                type="text"
+                placeholder="Search comics..."
+                className="pl-10 bg-white"
+                {...field}
+              />
+            </div>
           )}
         />
       </form>
