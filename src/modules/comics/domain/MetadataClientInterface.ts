@@ -35,11 +35,12 @@ export type SearchQuery = Filters & {
 };
 
 export interface MetadataClientInterface {
-  fetchBrowseOptions(filters: Filters): Promise<BrowseOptions>;
+  getBrowseOptions(filters: Filters): Promise<BrowseOptions>;
   searchEpisodes(
     query: SearchQuery,
   ): Promise<PaginatedResultsType<EpisodeEntity>>;
   getEpisodeById(id: string): Promise<EpisodeEntityWithRelations | false>;
+  getLatestUploadedEpisodes(limit?: number): Promise<EpisodeEntity[]>;
   getNextAndPreviousEpisodeIds(
     episode: EpisodeEntity,
   ): Promise<{ next: string | null; previous: string | null }>;

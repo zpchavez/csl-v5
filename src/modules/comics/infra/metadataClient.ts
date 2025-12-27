@@ -98,7 +98,49 @@ const executeQueryAsync = (
 };
 
 export const metadataClient: MetadataClientInterface = {
-  async fetchBrowseOptions(filters: Filters) {
+  async getLatestUploadedEpisodes(limit = 10): Promise<EpisodeEntity[]> {
+    const statement = db.prepare(`
+      SELECT DISTINCT
+        metadata_main.episode_id,
+        metadata_main.title_id,
+        metadata_titles.title,
+        metadata_authors.author_id,
+        (metadata_authors.first_name || ' ' || metadata_authors.last_name) AS author,
+        metadata_main.suffix,
+        metadata_main.date,
+        metadata_main.episode_title,
+        metadata_main.transcript,
+        metadata_main.summary,
+        metadata_titles.title
+      FROM metadata_main ${getMetadataJoins()}
+      ORDER BY metadata_main.episode_id DESC
+      LIMIT ?
+    `);
+
+    statement.bind([limit]);
+
+    const results: EpisodeEntity[] = [];
+    while (statement.step()) {
+      const row = statement.getAsObject();
+      results.push({
+        episode_id: row.episode_id as number,
+        title_id: row.title_id as number,
+        title: row.title as string,
+        author_id: row.author_id as number,
+        author: row.author as string,
+        suffix: row.suffix as string,
+        date: new Date(row.date as string),
+        episode_title: row.episode_title as string,
+        transcript: row.transcript as string,
+        summary: row.summary as string,
+      });
+    }
+    statement.free();
+
+    return results;
+  },
+
+  async getBrowseOptions(filters: Filters) {
     const fields: MetadataFieldQueryInfo[] = [
       {
         name: "years",

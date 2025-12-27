@@ -13,7 +13,7 @@ export function useGetBrowseOptions(filters: Filters) {
   useEffect(() => {
     async function loadBrowseOptions() {
       const fetchedBrowseOptions =
-        await metadataClient.fetchBrowseOptions(filters);
+        await metadataClient.getBrowseOptions(filters);
       setBrowseOptions(fetchedBrowseOptions);
     }
     loadBrowseOptions();

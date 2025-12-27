@@ -26,6 +26,10 @@ h3 {
   @apply text-2xl font-medium mb-2;
 }
 
+h4 {
+  @apply text-lg font-medium mb-2;
+}
+
 .link {
   @apply underline! text-black!;
 }
