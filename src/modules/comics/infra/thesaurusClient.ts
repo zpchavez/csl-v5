@@ -8,16 +8,22 @@ import type {
 } from "src/modules/comics/domain/TermEntity";
 
 export const thesaurusClient = {
-  getUsageCount(termId: number) {
-    // Get count of the term itself, plus all narrower (child) terms,
-    // including grand-child, great-grand-child, etc.
+  // Get count of each term itself, plus all narrower (child) terms,
+  // including grand-child, great-grand-child, etc.
+  getUsageCount(termIds: number[]): Record<number, number> {
+    if (termIds.length === 0) {
+      return {};
+    }
+
+    const placeholders = termIds.map(() => "?").join(",");
+
     const sql = `
       WITH RECURSIVE term_tree AS (
-        SELECT term_id
+        SELECT term_id, term_id as root_term_id
         FROM thesaurus_terms
-        WHERE term_id = ?
+        WHERE term_id IN (${placeholders})
         UNION ALL
-        SELECT tt.term_id
+        SELECT tt.term_id, ttree.root_term_id
         FROM thesaurus_terms tt
         JOIN thesaurus_relationships tr
         ON tt.term_id = tr.related_id
@@ -25,17 +31,33 @@ export const thesaurusClient = {
         ON tr.term_id = ttree.term_id
         WHERE tr.type = 'NT'
       )
-      SELECT COUNT(DISTINCT mtm.episode_id) AS usageCount
+      SELECT
+        ttree.root_term_id,
+        COUNT(DISTINCT mtm.episode_id) AS usageCount
       FROM metadata_term_map mtm
-      JOIN term_tree tt
-      ON mtm.term_id = tt.term_id
+      JOIN term_tree ttree
+      ON mtm.term_id = ttree.term_id
+      GROUP BY ttree.root_term_id
     `;
+
     const statement = db.prepare(sql);
-    statement.bind([termId]);
-    statement.step();
-    const row = statement.getAsObject();
+    statement.bind(termIds);
+
+    const result: Record<number, number> = {};
+
+    // Initialize all term IDs with 0 count
+    termIds.forEach((termId) => {
+      result[termId] = 0;
+    });
+
+    // Update with actual counts from the query
+    while (statement.step()) {
+      const row = statement.getAsObject();
+      result[row.root_term_id as number] = row.usageCount as number;
+    }
+
     statement.free();
-    return row.usageCount as number;
+    return result;
   },
 
   async getTermDetails(termId: number) {
