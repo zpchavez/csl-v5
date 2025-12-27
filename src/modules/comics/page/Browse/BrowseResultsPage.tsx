@@ -41,7 +41,7 @@ export function BrowseResultsPage({ query }: BrowseResultsPageProps) {
         <>
           {query.term ? <RelatedTerms termId={Number(query.term)} /> : null}
           {episodes?.totalCount === 0 && (
-            <div className="text-center">
+            <div className="text-center mt-6">
               <p className="text-center mb-4">No results found</p>
               <Button variant="default" asChild>
                 <Link to="/browse">Revise browse criteria</Link>
