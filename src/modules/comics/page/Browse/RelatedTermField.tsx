@@ -18,19 +18,14 @@ export function RelatedTermField({
   return (
     <div className="flex p-4 border-b border-black">
       <div className="w-1/4 text-center font-semibold">{label}</div>
-      {terms.map((term, index) =>
-        isPreferredTerm(term) ? (
-          <>
-            <TermLink term={term} />
-            {index < terms.length - 1 ? <>,&nbsp;</> : ""}
-          </>
-        ) : (
-          <>
-            {term.term}
-            {index < terms.length - 1 ? ", " : ""}
-          </>
-        ),
-      )}
+      <div className="flex-1">
+        {terms.map((term, index) => (
+          <span key={term.term_id}>
+            {isPreferredTerm(term) ? <TermLink term={term} /> : term.term}
+            {index < terms.length - 1 && <span>, </span>}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
