@@ -12,6 +12,7 @@ import type {
   TermOption,
 } from "src/modules/comics/domain/MetadataClientInterface";
 import { getMetadataJoins } from "src/modules/comics/infra/sqlHelper";
+import { thesaurusClient } from "./thesaurusClient";
 
 type MetadataFieldName =
   | "years"
@@ -333,12 +334,10 @@ export const metadataClient: MetadataClientInterface = {
     }
     charactersStatement.free();
 
-    // @TODO update to get recursive usage count
     const termsStatement = db.prepare(`
       SELECT
         thesaurus_terms.term_id,
-        thesaurus_terms.term,
-        (SELECT COUNT(*) FROM metadata_term_map WHERE metadata_term_map.term_id = thesaurus_terms.term_id) AS usageCount
+        thesaurus_terms.term
       FROM thesaurus_terms
       JOIN metadata_term_map
         ON metadata_term_map.term_id = thesaurus_terms.term_id
@@ -352,9 +351,16 @@ export const metadataClient: MetadataClientInterface = {
         term_id: termRow.term_id as number,
         term: termRow.term as string,
         is_preferred: true,
-        usageCount: termRow.usageCount as number,
+        usageCount: 0, // Placeholder
       });
     }
+
+    const termUsageCounts = thesaurusClient.getUsageCount(
+      terms.map((t) => t.term_id),
+    );
+    terms.forEach((term) => {
+      term.usageCount = termUsageCounts[term.term_id] || 0;
+    });
 
     return {
       episode_id: row.episode_id as number,
