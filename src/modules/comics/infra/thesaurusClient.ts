@@ -61,13 +61,6 @@ export const thesaurusClient = {
   },
 
   async getTermDetails(termId: number) {
-    const usageCountSQL = `(
-          SELECT COUNT(*)
-          FROM metadata_term_map
-          WHERE metadata_term_map.term_id = thesaurus_terms.term_id
-        ) AS usageCount
-    `;
-
     const getRelatedTermsStatement = (
       termId: number,
       type: "BT" | "NT" | "RT" | "UF" | "USE",
@@ -76,7 +69,6 @@ export const thesaurusClient = {
         SELECT
           thesaurus_terms.term_id,
           thesaurus_terms.term
-          ${type === "UF" ? "" : `,${usageCountSQL}`}
         FROM thesaurus_terms
         JOIN thesaurus_relationships
         ON thesaurus_terms.term_id = thesaurus_relationships.related_id
@@ -99,7 +91,7 @@ export const thesaurusClient = {
           term_id: termRow.term_id as number,
           term: termRow.term as string,
           is_preferred: true,
-          usageCount: termRow.usageCount as number,
+          usageCount: 0, // Placeholder
         });
       }
       return terms;
@@ -124,8 +116,7 @@ export const thesaurusClient = {
       SELECT
         term_id,
         term,
-        is_preferred,
-        ${usageCountSQL}
+        is_preferred
       FROM thesaurus_terms
       WHERE term_id = ?
       LIMIT 1
@@ -148,19 +139,41 @@ export const thesaurusClient = {
         usageCount: termRow.usageCount as number,
       };
 
-      const broaderTermsStatement = getRelatedTermsStatement(termId, "BT");
-      const narrowerTermsStatement = getRelatedTermsStatement(termId, "NT");
-      const relatedTermsStatement = getRelatedTermsStatement(termId, "RT");
-      const usedForTermsStatement = getRelatedTermsStatement(termId, "UF");
+      const broaderTerms = getPreferredTermsFromStatement(
+        getRelatedTermsStatement(termId, "BT"),
+      );
+      const narrowerTerms = getPreferredTermsFromStatement(
+        getRelatedTermsStatement(termId, "NT"),
+      );
+      const relatedTerms = getPreferredTermsFromStatement(
+        getRelatedTermsStatement(termId, "RT"),
+      );
+      const usedForTerms = getNonPreferredTermsFromStatement(
+        getRelatedTermsStatement(termId, "UF"),
+      );
+
+      const usageCounts = this.getUsageCount([
+        ...broaderTerms.map((t) => t.term_id),
+        ...narrowerTerms.map((t) => t.term_id),
+        ...relatedTerms.map((t) => t.term_id),
+      ]);
+
+      broaderTerms.forEach((t) => {
+        t.usageCount = usageCounts[t.term_id] || 0;
+      });
+      narrowerTerms.forEach((t) => {
+        t.usageCount = usageCounts[t.term_id] || 0;
+      });
+      relatedTerms.forEach((t) => {
+        t.usageCount = usageCounts[t.term_id] || 0;
+      });
 
       const termDetails: PreferredTermDetails = {
         term,
-        broader_terms: getPreferredTermsFromStatement(broaderTermsStatement),
-        narrower_terms: getPreferredTermsFromStatement(narrowerTermsStatement),
-        related_terms: getPreferredTermsFromStatement(relatedTermsStatement),
-        used_for_terms: getNonPreferredTermsFromStatement(
-          usedForTermsStatement,
-        ),
+        broader_terms: broaderTerms,
+        narrower_terms: narrowerTerms,
+        related_terms: relatedTerms,
+        used_for_terms: usedForTerms,
       };
 
       return termDetails;
@@ -173,6 +186,12 @@ export const thesaurusClient = {
 
       const useTermsStatement = getRelatedTermsStatement(termId, "USE");
       const useTerms = getPreferredTermsFromStatement(useTermsStatement);
+
+      const usageCounts = this.getUsageCount(useTerms.map((t) => t.term_id));
+
+      useTerms.forEach((t) => {
+        t.usageCount = usageCounts[t.term_id] || 0;
+      });
 
       const termDetails: NonPreferredTermDetails = {
         term,
