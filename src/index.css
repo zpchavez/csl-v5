@@ -34,6 +34,10 @@ h3 {
   @apply leading-7 mb-8;
 }
 
+.news-page a {
+  @apply font-semibold underline;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
