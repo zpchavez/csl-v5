@@ -8,6 +8,36 @@ import type {
 } from "src/modules/comics/domain/TermEntity";
 
 export const thesaurusClient = {
+  getUsageCount(termId: number) {
+    // Get count of the term itself, plus all narrower (child) terms,
+    // including grand-child, great-grand-child, etc.
+    const sql = `
+      WITH RECURSIVE term_tree AS (
+        SELECT term_id
+        FROM thesaurus_terms
+        WHERE term_id = ?
+        UNION ALL
+        SELECT tt.term_id
+        FROM thesaurus_terms tt
+        JOIN thesaurus_relationships tr
+        ON tt.term_id = tr.related_id
+        JOIN term_tree ttree
+        ON tr.term_id = ttree.term_id
+        WHERE tr.type = 'NT'
+      )
+      SELECT COUNT(DISTINCT mtm.episode_id) AS usageCount
+      FROM metadata_term_map mtm
+      JOIN term_tree tt
+      ON mtm.term_id = tt.term_id
+    `;
+    const statement = db.prepare(sql);
+    statement.bind([termId]);
+    statement.step();
+    const row = statement.getAsObject();
+    statement.free();
+    return row.usageCount as number;
+  },
+
   async getTermDetails(termId: number) {
     const usageCountSQL = `(
           SELECT COUNT(*)
