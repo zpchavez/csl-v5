@@ -1,4 +1,5 @@
-import { Link } from "@tanstack/react-router";
+import { BrowseQueryLink } from "src/components/BrowseQueryLink";
+import { TermLink } from "src/components/TermLink";
 import type { EpisodeEntityWithRelations } from "src/modules/comics/domain/EpisodeEntity";
 import { metadataService } from "src/modules/comics/infra/metadataService";
 import { MetadataField } from "./MetadataField";
@@ -14,22 +15,16 @@ export function Metadata({ episode }: MetadataProps) {
         <h3>Metadata</h3>
       </div>
       <MetadataField label="Title">
-        <Link
-          to="/browse/results"
-          search={{ title: String(episode.title_id) }}
-          className="underline"
-        >
-          {episode.title}
-        </Link>
+        <BrowseQueryLink
+          query={{ title: String(episode.title_id) }}
+          label={episode.title}
+        />
       </MetadataField>
       <MetadataField label="Author">
-        <Link
-          to="/browse/results"
-          search={{ author: String(episode.author_id) }}
-          className="underline"
-        >
-          {episode.author}
-        </Link>
+        <BrowseQueryLink
+          query={{ author: String(episode.author_id) }}
+          label={episode.author}
+        />
       </MetadataField>
       <MetadataField label="Date Published">
         {metadataService.getDisplayDate(episode.date)} -&nbsp;
@@ -47,14 +42,10 @@ export function Metadata({ episode }: MetadataProps) {
         <MetadataField label="Characters">
           {episode.characters.map((character, index) => (
             <>
-              <Link
-                to="/browse/results"
-                search={{ character: String(character.character_id) }}
-                key={character.character_id}
-                className="whitespace-nowrap underline"
-              >
-                {character.name}
-              </Link>
+              <BrowseQueryLink
+                query={{ character: String(character.character_id) }}
+                label={character.name}
+              />
               {index < episode.characters.length - 1 ? ", " : ""}
             </>
           ))}
@@ -64,14 +55,7 @@ export function Metadata({ episode }: MetadataProps) {
         <MetadataField label="Contents">
           {episode.terms.map((term, index) => (
             <>
-              <Link
-                to="/browse/results"
-                search={{ term: String(term.term_id) }}
-                key={term.term_id}
-                className="whitespace-nowrap underline"
-              >
-                {term.term}&nbsp;({term.usageCount})
-              </Link>
+              <TermLink term={term} />
               {index < episode.terms.length - 1 ? ", " : ""}
             </>
           ))}

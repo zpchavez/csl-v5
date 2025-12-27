@@ -1,8 +1,8 @@
+import { TermLink } from "src/components/TermLink";
 import {
   isPreferredTerm,
   type Term,
 } from "src/modules/comics/domain/TermEntity";
-import { TermLink } from "./TermLink";
 
 export function RelatedTermField({
   label,

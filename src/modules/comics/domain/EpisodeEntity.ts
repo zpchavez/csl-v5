@@ -1,3 +1,5 @@
+import type { PreferredTerm } from "src/modules/comics/domain/TermEntity";
+
 export type EpisodeEntity = {
   episode_id: number;
   title_id: number;
@@ -16,11 +18,7 @@ export type EpisodeEntityWithRelations = EpisodeEntity & {
   characters: EpisodeCharacters;
 };
 
-export type EpisodeTerm = {
-  term_id: number;
-  term: string;
-  usageCount: number;
-};
+export type EpisodeTerm = PreferredTerm;
 
 export type EpisodeCharacter = {
   character_id: number;

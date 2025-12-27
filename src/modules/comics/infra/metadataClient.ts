@@ -1,6 +1,9 @@
 import { db } from "src/lib/db";
 import type { PaginatedResultsType } from "src/lib/PaginatedResultsType";
-import type { EpisodeEntity } from "src/modules/comics/domain/EpisodeEntity";
+import type {
+  EpisodeEntity,
+  EpisodeTerms,
+} from "src/modules/comics/domain/EpisodeEntity";
 import type {
   BrowseOptions,
   Filters,
@@ -330,6 +333,7 @@ export const metadataClient: MetadataClientInterface = {
     }
     charactersStatement.free();
 
+    // @TODO update to get recursive usage count
     const termsStatement = db.prepare(`
       SELECT
         thesaurus_terms.term_id,
@@ -341,12 +345,13 @@ export const metadataClient: MetadataClientInterface = {
       WHERE metadata_term_map.episode_id = ?
     `);
     termsStatement.bind([id]);
-    const terms = [];
+    const terms: EpisodeTerms = [];
     while (termsStatement.step()) {
       const termRow = termsStatement.getAsObject();
       terms.push({
         term_id: termRow.term_id as number,
         term: termRow.term as string,
+        is_preferred: true,
         usageCount: termRow.usageCount as number,
       });
     }
