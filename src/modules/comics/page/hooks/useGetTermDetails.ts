@@ -3,7 +3,6 @@ import type { TermDetails } from "src/modules/comics/domain/TermEntity";
 import { thesaurusClient } from "src/modules/comics/infra/thesaurusClient";
 
 export function useGetTermDetails(termId: number) {
-  // @TODO Check for flash-of-old-content issue when navigating terms
   const [termDetails, setTermDetails] = useState<TermDetails | null | false>(
     null,
   );
