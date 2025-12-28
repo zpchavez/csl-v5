@@ -8,9 +8,12 @@ type NavLinkProps = {
 };
 
 function NavLink({ path, text }: NavLinkProps) {
-  const baseClasses = "px-4 py-2 text-white! rounded-lg no-underline";
-  const activeClasses = "bg-blue-600 hover:bg-blue-500";
-  const inactiveClasses = "bg-gray-700 hover:bg-gray-600";
+  const baseClasses =
+    "px-3 py-2 text-lg font-medium transition-all duration-200 relative no-underline";
+  const activeClasses =
+    "text-blue-700 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-blue-700";
+  const inactiveClasses =
+    "text-gray-700 hover:text-blue-600 hover:after:absolute hover:after:bottom-0 hover:after:left-0 hover:after:right-0 hover:after:h-0.5 hover:after:bg-blue-300";
 
   return (
     <Link
@@ -39,7 +42,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
           />
         </Link>
         <MainSearchBar />
-        <nav className="flex flex-wrap justify-center gap-3 mt-4">
+        <nav className="flex flex-wrap justify-center gap-4 mt-6 border-b border-gray-300 pb-6">
           <NavLink path="/" text="News" />
           <NavLink path="/browse" text="Browse" />
           <NavLink path="/links" text="Books & Links" />
@@ -47,7 +50,6 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
           <NavLink path="/copyright" text="Copyright Statement" />
         </nav>
       </header>
-      <hr />
       <div className="mt-6">{children}</div>
     </div>
   );
