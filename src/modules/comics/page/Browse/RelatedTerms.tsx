@@ -18,7 +18,7 @@ export function RelatedTerms({ termId }: RelatedTermsProps) {
         <h3>{termDetails.term.term}</h3>
       </div>
       {"use_terms" in termDetails ? (
-        <RelatedTermField label="Use" terms={termDetails.use_terms} />
+        <RelatedTermField label="See" terms={termDetails.use_terms} />
       ) : null}
       {"used_for_terms" in termDetails ? (
         <RelatedTermField label="Used For" terms={termDetails.used_for_terms} />

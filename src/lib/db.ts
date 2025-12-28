@@ -11,5 +11,5 @@ const dbData = new Uint8Array(await response.arrayBuffer());
 export const db = new SQL.Database(dbData);
 
 // Database related @TODOs:
-// - Find episodes with non-preferred terms assigned and fix it.
+// - Look into why metadata_term_map_omit_deleted has fewer rows than metadata_term_map
 // - Remove views if I didn't end up needing them.
