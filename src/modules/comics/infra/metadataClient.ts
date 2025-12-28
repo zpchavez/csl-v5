@@ -37,23 +37,23 @@ const getWheresAndBindings = (
   const bindings = [];
   if (filters.year && exclude !== "years") {
     whereStrings.push(`strftime('%Y', date) = ?`);
-    bindings.push(filters.year);
+    bindings.push(filters.year.toString());
   }
   if (filters.title && exclude !== "titles") {
     whereStrings.push(`metadata_titles.title_id = ?`);
-    bindings.push(filters.title);
+    bindings.push(filters.title.toString());
   }
   if (filters.author && exclude !== "authors") {
     whereStrings.push(`metadata_authors.author_id = ?`);
-    bindings.push(filters.author);
+    bindings.push(filters.author.toString());
   }
   if (filters.character && exclude !== "characters") {
     whereStrings.push(`metadata_characters.character_id = ?`);
-    bindings.push(filters.character);
+    bindings.push(filters.character.toString());
   }
   if (filters.term && exclude !== "terms") {
     whereStrings.push(`thesaurus_terms.term_id = ?`);
-    bindings.push(filters.term);
+    bindings.push(filters.term.toString());
   }
   return [whereStrings.length ? whereStrings.join(" AND ") : "true", bindings];
 };
