@@ -1,7 +1,24 @@
-import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { createRootRoute, Outlet, redirect } from "@tanstack/react-router";
 import { MainLayout } from "src/components/MainLayout";
 
 export const Route = createRootRoute({
+  beforeLoad: ({ location }) => {
+    // Handle old PHP-style links to specific episodes
+    if (location.pathname === "/display.php") {
+      const searchParams = new URLSearchParams(location.search);
+      const id = searchParams.get("id");
+      if (id) {
+        throw redirect({
+          to: "/display/$id",
+          params: { id: id },
+        });
+      } else {
+        throw redirect({
+          to: "/",
+        });
+      }
+    }
+  },
   component: RootComponent,
 });
 
