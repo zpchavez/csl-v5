@@ -16,13 +16,13 @@ export function Metadata({ episode }: MetadataProps) {
       </div>
       <MetadataField label="Title">
         <BrowseQueryLink
-          query={{ title: String(episode.title_id) }}
+          query={{ title: episode.title_id }}
           label={episode.title}
         />
       </MetadataField>
       <MetadataField label="Author">
         <BrowseQueryLink
-          query={{ author: String(episode.author_id) }}
+          query={{ author: episode.author_id }}
           label={episode.author}
         />
       </MetadataField>
@@ -43,7 +43,7 @@ export function Metadata({ episode }: MetadataProps) {
           {episode.characters.map((character, index) => (
             <>
               <BrowseQueryLink
-                query={{ character: String(character.character_id) }}
+                query={{ character: character.character_id }}
                 label={character.name}
               />
               {index < episode.characters.length - 1 ? ", " : ""}

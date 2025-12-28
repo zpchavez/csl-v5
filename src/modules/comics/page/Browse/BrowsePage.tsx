@@ -38,7 +38,13 @@ export function BrowsePage() {
     [values.year, values.title, values.author, values.character, values.term],
   );
 
-  const browseOptions = useGetBrowseOptions(filters);
+  const browseOptions = useGetBrowseOptions({
+    year: filters.year ? Number(filters.year) : undefined,
+    title: filters.title ? Number(filters.title) : undefined,
+    author: filters.author ? Number(filters.author) : undefined,
+    character: filters.character ? Number(filters.character) : undefined,
+    term: filters.term ? Number(filters.term) : undefined,
+  });
 
   const navigate = useNavigate({ from: "/browse" });
 

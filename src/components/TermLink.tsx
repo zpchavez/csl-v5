@@ -8,7 +8,7 @@ type TermLinkProps = {
 export function TermLink({ term }: TermLinkProps) {
   return (
     <BrowseQueryLink
-      query={{ term: String(term.term_id) }}
+      query={{ term: term.term_id }}
       label={
         <>
           {term.term} ({term.usageCount})
