@@ -38,7 +38,7 @@ h4 {
   @apply leading-7 mb-8;
 }
 
-.news-page a {
+.news-page a, .metadata-notes a {
   @apply font-semibold underline;
 }
 

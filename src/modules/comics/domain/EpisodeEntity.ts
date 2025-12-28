@@ -11,6 +11,7 @@ export type EpisodeEntity = {
   episode_title: string;
   transcript: string;
   summary: string;
+  notes: string;
 };
 
 export type EpisodeEntityWithRelations = EpisodeEntity & {

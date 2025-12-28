@@ -111,6 +111,7 @@ export const metadataClient: MetadataClientInterface = {
         metadata_main.episode_title,
         metadata_main.transcript,
         metadata_main.summary,
+        metadata_main.notes,
         metadata_titles.title
       FROM metadata_main ${getMetadataJoins()}
       ORDER BY metadata_main.episode_id DESC
@@ -133,6 +134,7 @@ export const metadataClient: MetadataClientInterface = {
         episode_title: row.episode_title as string,
         transcript: row.transcript as string,
         summary: row.summary as string,
+        notes: row.notes as string,
       });
     }
     statement.free();
@@ -289,6 +291,7 @@ export const metadataClient: MetadataClientInterface = {
         metadata_main.episode_title,
         metadata_main.transcript,
         metadata_main.summary,
+        metadata_main.notes,
         metadata_titles.title
       FROM metadata_main ${getMetadataJoins()}
       ${whereClause}
@@ -312,6 +315,7 @@ export const metadataClient: MetadataClientInterface = {
         episode_title: row.episode_title as string,
         transcript: row.transcript as string,
         summary: row.summary as string,
+        notes: row.notes as string,
       });
     }
 
@@ -340,6 +344,7 @@ export const metadataClient: MetadataClientInterface = {
         metadata_main.episode_title,
         metadata_main.transcript,
         metadata_main.summary,
+        metadata_main.notes,
         metadata_titles.title
       FROM metadata_main ${getMetadataJoins()}
       WHERE metadata_main.episode_id = ?
@@ -415,6 +420,7 @@ export const metadataClient: MetadataClientInterface = {
       episode_title: row.episode_title as string,
       transcript: row.transcript as string,
       summary: row.summary as string,
+      notes: row.notes as string,
       characters,
       terms,
     };

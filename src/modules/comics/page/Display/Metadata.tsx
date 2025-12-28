@@ -61,6 +61,15 @@ export function Metadata({ episode }: MetadataProps) {
           ))}
         </MetadataField>
       ) : null}
+      {episode.notes && (
+        <MetadataField label="Notes">
+          <div
+            className="metadata-notes"
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: Trusted source
+            dangerouslySetInnerHTML={{ __html: episode.notes }}
+          />
+        </MetadataField>
+      )}
       {episode.transcript && (
         <MetadataField label="Transcript">
           <pre className="whitespace-pre-wrap">{episode.transcript}</pre>
