@@ -22,7 +22,7 @@ function AboutRoute() {
       </p>
       <p className="paragraph">
         The Comic Strip Library began as a class project. I continued working on
-        it on-and-off for some years after graduating. Now it exists in a this
+        it on-and-off for some years after graduating. Now it exists in this
         read-only form.
       </p>
     </div>
