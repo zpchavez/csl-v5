@@ -22,11 +22,11 @@ export type BrowseOptions = {
 };
 
 export type Filters = {
-  year?: string;
-  title?: string;
-  term?: string;
-  author?: string;
-  character?: string;
+  year?: number;
+  title?: number;
+  term?: number;
+  author?: number;
+  character?: number;
 };
 
 export type SearchQuery = Filters & {

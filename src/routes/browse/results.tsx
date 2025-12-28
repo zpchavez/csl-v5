@@ -3,13 +3,12 @@ import { zodValidator } from "@tanstack/zod-adapter";
 import { BrowseResultsPage } from "src/modules/comics/page/Browse/BrowseResultsPage";
 import { z } from "zod";
 
-// @TODO fix the use of quotes around all the IDs
 const browseSchema = z.object({
-  year: z.string().optional(),
-  title: z.string().optional(),
-  character: z.string().optional(),
-  author: z.string().optional(),
-  term: z.string().optional(),
+  year: z.coerce.number().optional(),
+  title: z.coerce.number().optional(),
+  character: z.coerce.number().optional(),
+  author: z.coerce.number().optional(),
+  term: z.coerce.number().optional(),
   search: z.string().optional(),
   page: z.coerce.number().min(1).optional().catch(1),
 });

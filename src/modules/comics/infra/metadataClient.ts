@@ -225,23 +225,23 @@ export const metadataClient: MetadataClientInterface = {
 
     if (query.year) {
       whereConditions.push(`strftime('%Y', metadata_main.date) = ?`);
-      bindings.push(query.year);
+      bindings.push(query.year.toString());
     }
     if (query.title) {
       whereConditions.push(`metadata_titles.title_id = ?`);
-      bindings.push(query.title);
+      bindings.push(query.title.toString());
     }
     if (query.author) {
       whereConditions.push(`metadata_authors.author_id = ?`);
-      bindings.push(query.author);
+      bindings.push(query.author.toString());
     }
     if (query.character) {
       whereConditions.push(`metadata_characters.character_id = ?`);
-      bindings.push(query.character);
+      bindings.push(query.character.toString());
     }
     if (query.term) {
       whereConditions.push(`thesaurus_terms.term_id = ?`);
-      bindings.push(query.term);
+      bindings.push(query.term.toString());
     }
     if (query.search) {
       whereConditions.push(`(
