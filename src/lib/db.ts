@@ -9,7 +9,3 @@ const response = await fetch(`${config.host}/database.db`);
 const dbData = new Uint8Array(await response.arrayBuffer());
 
 export const db = new SQL.Database(dbData);
-
-// Database related @TODOs:
-// - Look into why metadata_term_map_omit_deleted has fewer rows than metadata_term_map
-// - Remove views if I didn't end up needing them.
