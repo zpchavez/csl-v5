@@ -9,6 +9,7 @@ const router = createRouter({
   routeTree,
   defaultPreload: "intent",
   scrollRestoration: true,
+  basepath: import.meta.env.VITE_BASE_PATH || "/",
 });
 
 // Register things for typesafety
