@@ -1,5 +1,6 @@
 import { createRootRoute, Outlet, redirect } from "@tanstack/react-router";
 import { MainLayout } from "src/components/MainLayout";
+import { NotFound } from "src/components/NotFound";
 
 export const Route = createRootRoute({
   beforeLoad: ({ location }) => {
@@ -20,6 +21,7 @@ export const Route = createRootRoute({
     }
   },
   component: RootComponent,
+  notFoundComponent: () => <NotFound message="Page not found" />,
 });
 
 function RootComponent() {

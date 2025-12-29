@@ -1,1 +1,1 @@
-A read-only rewrite of my Comic Strip Library site.
+A read-only rewrite of an old web site.
