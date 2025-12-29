@@ -4,8 +4,6 @@ import "./index.css";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { routeTree } from "src/routeTree.gen";
 
-console.log("Base Path:", import.meta.env.VITE_BASE_PATH);
-
 // Set up a Router instance
 const router = createRouter({
   routeTree,
