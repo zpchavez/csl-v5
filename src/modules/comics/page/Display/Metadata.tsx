@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { BrowseQueryLink } from "src/components/BrowseQueryLink";
 import { TermLink } from "src/components/TermLink";
 import type { EpisodeEntityWithRelations } from "src/modules/comics/domain/EpisodeEntity";
@@ -41,23 +42,23 @@ export function Metadata({ episode }: MetadataProps) {
       {episode.characters.length ? (
         <MetadataField label="Characters">
           {episode.characters.map((character, index) => (
-            <>
+            <Fragment key={character.character_id}>
               <BrowseQueryLink
                 query={{ character: character.character_id }}
                 label={character.name}
               />
               {index < episode.characters.length - 1 ? ", " : ""}
-            </>
+            </Fragment>
           ))}
         </MetadataField>
       ) : null}
       {episode.terms.length ? (
         <MetadataField label="Contents">
           {episode.terms.map((term, index) => (
-            <>
+            <Fragment key={term.term_id}>
               <TermLink term={term} />
               {index < episode.terms.length - 1 ? ", " : ""}
-            </>
+            </Fragment>
           ))}
         </MetadataField>
       ) : null}

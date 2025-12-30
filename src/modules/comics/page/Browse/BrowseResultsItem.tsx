@@ -15,7 +15,7 @@ export function BrowseResultsItem({
   return (
     <div>
       <div className="text-center">{episode.title}</div>
-      <div className="text-center">
+      <div className="text-center font-mono mb-1">
         {metadataService.getDisplayDate(episode.date)}
       </div>
       <Link to={`/display/$id`} params={{ id: String(episode.episode_id) }}>

@@ -29,22 +29,16 @@ export function BrowsePage() {
 
   const filters = useMemo(
     () => ({
-      year: values.year || undefined,
-      title: values.title || undefined,
-      author: values.author || undefined,
-      character: values.character || undefined,
-      term: values.term || undefined,
+      year: values.year ? Number(values.year) : undefined,
+      title: values.title ? Number(values.title) : undefined,
+      author: values.author ? Number(values.author) : undefined,
+      character: values.character ? Number(values.character) : undefined,
+      term: values.term ? Number(values.term) : undefined,
     }),
     [values.year, values.title, values.author, values.character, values.term],
   );
 
-  const browseOptions = useGetBrowseOptions({
-    year: filters.year ? Number(filters.year) : undefined,
-    title: filters.title ? Number(filters.title) : undefined,
-    author: filters.author ? Number(filters.author) : undefined,
-    character: filters.character ? Number(filters.character) : undefined,
-    term: filters.term ? Number(filters.term) : undefined,
-  });
+  const browseOptions = useGetBrowseOptions(filters);
 
   const navigate = useNavigate({ from: "/browse" });
 
