@@ -12,7 +12,7 @@ export const linksClient: LinksClientInterface = {
     while (statement.step()) {
       const row = statement.getAsObject();
       results.push({
-        resource_id: row.post_id as number,
+        resource_id: row.resource_id as number,
         title_id: row.title_id as number,
         resource_title: row.resource_title as string,
         cover: row.cover as string,
