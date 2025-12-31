@@ -68,6 +68,6 @@ export function useGetDimensions({
 
   return {
     dimensions,
-    isLoading: !episodes || Object.keys(dimensions).length < episodes.length,
+    isLoading: episodes && Object.keys(dimensions).length < episodes.length,
   };
 }
