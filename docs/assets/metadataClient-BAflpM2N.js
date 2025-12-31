@@ -1,4 +1,4 @@
-import{d as c}from"./db-1x1IjQK2.js";function l(){return`JOIN metadata_titles ON metadata_main.title_id = metadata_titles.title_id
+import{d as c}from"./db-C1-VNlwc.js";function l(){return`JOIN metadata_titles ON metadata_main.title_id = metadata_titles.title_id
       JOIN metadata_author_title_map ON metadata_author_title_map.title_id = metadata_titles.title_id
       JOIN metadata_authors ON metadata_authors.author_id = metadata_author_title_map.author_id
       LEFT JOIN metadata_character_map ON metadata_character_map.episode_id = metadata_main.episode_id
